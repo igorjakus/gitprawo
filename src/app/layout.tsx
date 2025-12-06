@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Minimal Blog",
-  description: "A simple blog app built with Next.js",
+  title: "GitPrawo - System Monitorowania Legislacji",
+  description: "Platforma do śledzenia zmian w polskim prawie",
 };
 
 export default function RootLayout({
@@ -12,16 +13,52 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="bg-gray-50 text-gray-800 antialiased">
-        <header className="py-4 bg-gray-100 shadow-md">
-          <div className="container mx-auto px-4">
-            <h1 className="text-2xl font-bold">GitPrawo</h1>
+    <html lang="pl">
+      <body className="bg-gray-50 text-gray-900 antialiased">
+        <header className="bg-[#1e3a8a] text-white shadow-md">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="flex items-center space-x-3">
+                <div className="text-2xl font-bold">GitPrawo</div>
+                <div className="hidden md:block text-sm text-blue-200">
+                  System Monitorowania Legislacji
+                </div>
+              </Link>
+              <nav className="flex space-x-6">
+                <Link 
+                  href="/" 
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  Akty prawne
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  O projekcie
+                </Link>
+              </nav>
+            </div>
           </div>
         </header>
-        <main className="container mx-auto px-4 py-8">{children}</main>
-        <footer className="py-4 bg-gray-100 text-center">
-          <p className="text-sm text-gray-600">© 2025 GitPrawo</p>
+        <main className="min-h-screen">{children}</main>
+        <footer className="bg-gray-100 border-t border-gray-200 mt-16">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+              <p>© 2025 GitPrawo - Otwarty system monitorowania legislacji</p>
+              <div className="flex space-x-4 mt-2 md:mt-0">
+                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                  Kontakt
+                </a>
+                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                  API
+                </a>
+                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
         </footer>
       </body>
     </html>
