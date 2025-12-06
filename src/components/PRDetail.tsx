@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { PullRequest, PRChange, PRComment, PRAIFeedback } from '@/types';
 import EditPRModal from './EditPR';
 import AddPRChangeForm from './AddPRChangeForm';
@@ -319,15 +320,21 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
       )}
 
       {/* AI Feedback */}
-      <div className="bg-gradient-to-r from-sky-50 via-white to-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
+      <div
+        className={`p-6 rounded-lg border shadow-sm transition-colors ${
+          aiFeedback && !aiFeedback.approved
+            ? 'bg-rose-100 border-rose-200'
+            : 'bg-sky-100 border-indigo-200'
+        }`}
+      >
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold">
               ✦
             </div>
             <div>
-              <p className="text-sm uppercase tracking-wide text-indigo-700 font-semibold">Gemini AI</p>
-              <h2 className="text-xl font-bold text-gray-900">Opinia AI</h2>
+              <h2 className="text-xl font-bold text-gray-900">Wsparcie AI</h2>
+              <p className="text-sm text-indigo-700">Automatyczna ocena tekstu PR</p>
             </div>
           </div>
 
@@ -335,8 +342,8 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
             <span
               className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 aiFeedback.approved
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-red-100 text-red-800'
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                  : 'bg-red-50 text-red-900 border border-red-300 shadow-[0_0_0_1px_rgba(248,113,113,0.35)]'
               }`}
             >
               {aiFeedback.approved ? 'Zatwierdzone' : 'Wymaga poprawek'}
@@ -352,7 +359,9 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
         {aiFeedback ? (
           <div className="bg-white border border-indigo-100 rounded-lg p-4 shadow-sm">
-            <p className="text-gray-800 whitespace-pre-wrap">{aiFeedback.message}</p>
+            <div className="prose prose-sm text-gray-800 max-w-none">
+              <ReactMarkdown>{aiFeedback.message}</ReactMarkdown>
+            </div>
             <p className="mt-3 text-xs text-gray-500">
               Wygenerowano: {new Date(aiFeedback.createdAt).toLocaleString('pl-PL')}
             </p>
