@@ -70,9 +70,22 @@ export default async function ActPage({
             <button className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors">
               Zobacz pełny tekst
             </button>
-            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
-              Eksportuj
-            </button>
+            {act.versions[0] ? (
+              <a
+                href={`/api/acts/${act.id}/versions/${act.versions[0].id}`}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+                download
+              >
+                Eksportuj
+              </a>
+            ) : (
+              <button
+                className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded cursor-not-allowed"
+                disabled
+              >
+                Eksportuj
+              </button>
+            )}
           </div>
         </div>
       </div>

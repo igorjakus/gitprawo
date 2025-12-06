@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import DiffViewer from '../../../../components/DiffViewer';
-import { getDiff } from '../../../../lib/get_diff';
-import { getActById, getVersionContent } from '../../../../lib/acts';
+import DiffViewer from '@/components/DiffViewer';
+import { getDiff } from '@/lib/get_diff';
+import { getActById, getVersionContent } from '@/lib/acts';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -96,12 +96,20 @@ export default async function ComparePage({
           ← Powrót do aktu prawnego
         </Link>
         <div className="flex space-x-3">
-          <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors">
-            Eksportuj diff
-          </button>
-          <button className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors">
+          <a
+            href={`/api/acts/${actId}/versions/${toVersion.id}`}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+            download
+          >
+            Pobierz Markdown
+          </a>
+          <a
+            href={`/api/acts/${actId}/versions/${toVersion.id}`}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors"
+            download
+          >
             Zobacz pełny tekst
-          </button>
+          </a>
         </div>
       </div>
 
