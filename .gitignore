@@ -40,9 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Plan
-plan.md
-
 # Scraper outputs (PDFs tymczasowe)
 scripts/output/*.pdf
 !scripts/output/.gitkeep
