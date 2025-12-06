@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { getActById, getVersionContent } from '@/lib/acts';
 
 function slugify(input: string): string {
@@ -13,7 +13,7 @@ function slugify(input: string): string {
 }
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string; versionId: string }> }
 ) {
   const { id, versionId } = await params;

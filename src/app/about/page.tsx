@@ -1,7 +1,7 @@
 export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8 max-w-2xl mx-auto">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
         <h1 className="text-3xl font-bold text-[#1e3a8a] mb-4">O projekcie GitPrawo</h1>
         <p className="text-lg text-gray-700 mb-6">
           GitPrawo to otwarta platforma do monitorowania zmian w polskim prawie. Pozwala śledzić historię wersji aktów prawnych, porównywać zmiany oraz wizualizować proces legislacyjny w stylu znanym z systemów kontroli wersji.
