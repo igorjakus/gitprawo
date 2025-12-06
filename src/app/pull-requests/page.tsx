@@ -27,7 +27,7 @@ export default async function PullRequestsPage() {
               href="/pull-requests/new"
               className="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
-              + Nowy pull request
+              + Nowa propozycja zmian
             </Link>
           ) : (
             <p className="text-amber-700 bg-amber-50 p-4 rounded">
@@ -36,10 +36,10 @@ export default async function PullRequestsPage() {
                   <Link href="/login" className="font-medium hover:underline">
                     Zaloguj się
                   </Link>{' '}
-                  aby utworzyć pull request (dostępne tylko dla ekspertów)
+                  aby utworzyć propozycję zmian (dostępne tylko dla ekspertów)
                 </>
               ) : (
-                <span>Tworzenie pull requestów jest dostępne tylko dla ekspertów</span>
+                <span>Tworzenie propozycji zmian jest dostępne tylko dla ekspertów</span>
               )}
             </p>
           )}

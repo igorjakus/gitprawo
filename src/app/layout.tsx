@@ -39,7 +39,7 @@ export default function RootLayout({
                   href="/pull-requests" 
                   className="hover:text-blue-200 transition-colors"
                 >
-                  Pull requesty
+                  Propozycje zmian
                 </Link>
                 <Link 
                   href="/about" 

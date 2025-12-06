@@ -52,7 +52,7 @@ export default function CreatePRForm({
 
     try {
       if (!token) {
-        setError('Musisz być zalogowany aby utworzyć pull request');
+        setError('Musisz być zalogowany aby utworzyć propozycję zmian');
         return;
       }
 
@@ -78,7 +78,7 @@ export default function CreatePRForm({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Nie udało się utworzyć pull requesta');
+        throw new Error(data.error || 'Nie udało się utworzyć propozycji zmian');
       }
 
       const pr = await response.json();
@@ -101,7 +101,7 @@ export default function CreatePRForm({
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg border border-gray-200">
-      <h3 className="text-xl font-semibold mb-4">Utwórz nowy pull request</h3>
+      <h3 className="text-xl font-semibold mb-4">Utwórz nową propozycję zmian</h3>
 
       {error && (
         <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">
@@ -166,8 +166,8 @@ export default function CreatePRForm({
         </label>
         <p className="text-xs text-gray-500 mt-1">
           {isPublic
-            ? 'Ten pull request będzie widoczny dla wszystkich użytkowników'
-            : 'Ten pull request będzie widoczny tylko dla zalogowanych użytkowników'}
+            ? 'Ta propozycja zmian będzie widoczna dla wszystkich użytkowników'
+            : 'Ta propozycja zmian będzie widoczna tylko dla zalogowanych użytkowników'}
         </p>
       </div>
 
@@ -176,7 +176,7 @@ export default function CreatePRForm({
         disabled={loading || !title}
         className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
       >
-        {loading ? 'Tworzenie...' : 'Utwórz pull request'}
+        {loading ? 'Tworzenie...' : 'Utwórz propozycję zmian'}
       </button>
     </form>
   );

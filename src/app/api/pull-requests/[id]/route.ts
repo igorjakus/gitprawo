@@ -15,6 +15,7 @@ export async function GET(
 
     const { id } = await params;
     const prId = parseInt(id);
+    const userId = user ? user.id : null;
 
     const result = await db.query(
       `SELECT 
@@ -31,12 +32,15 @@ export async function GET(
         pr.updated_at as "updatedAt",
         pr.merged_at as "mergedAt",
         pr.merged_by_id as "mergedById",
-        a.title as "actTitle"
+        a.title as "actTitle",
+        (SELECT COUNT(*)::int FROM pr_votes WHERE pull_request_id = pr.id AND vote_type = 'like') as "likesCount",
+        (SELECT COUNT(*)::int FROM pr_votes WHERE pull_request_id = pr.id AND vote_type = 'dislike') as "dislikesCount",
+        (SELECT vote_type FROM pr_votes WHERE pull_request_id = pr.id AND user_id = $2) as "userVote"
       FROM pull_requests pr
       JOIN users u ON pr.author_id = u.id
       JOIN acts a ON pr.act_id = a.id
       WHERE pr.id = $1`,
-      [prId]
+      [prId, userId]
     );
 
     if (result.rows.length === 0) {

@@ -15,6 +15,9 @@ async function main() {
     await client.query('BEGIN');
 
     // Drop tables in correct order (reverse of creation due to foreign keys)
+    console.log('Dropping table "pr_votes"...');
+    await client.query('DROP TABLE IF EXISTS pr_votes CASCADE');
+
     console.log('Dropping table "pr_comments"...');
     await client.query('DROP TABLE IF EXISTS pr_comments CASCADE');
 

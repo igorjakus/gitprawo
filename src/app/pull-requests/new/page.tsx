@@ -72,11 +72,11 @@ export default function NewPullRequestPage() {
           href="/pull-requests"
           className="text-blue-600 hover:underline mb-6 inline-block"
         >
-          ← Wróć do listy PR-ów
+          ← Wróć do listy propozycji
         </Link>
 
         <h1 className="text-4xl font-bold text-gray-900 mb-8">
-          Nowy pull request
+          Nowa propozycja zmian
         </h1>
 
         <div className="mb-6">

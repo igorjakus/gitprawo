@@ -136,6 +136,19 @@ async function main() {
     `);
     console.log('Table "pr_ai_feedback" created');
 
+    // 7c. Create PR Votes Table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS pr_votes (
+        id SERIAL PRIMARY KEY,
+        pull_request_id INTEGER NOT NULL REFERENCES pull_requests(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        vote_type VARCHAR(10) NOT NULL CHECK (vote_type IN ('like', 'dislike')),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(pull_request_id, user_id)
+      );
+    `);
+    console.log('Table "pr_votes" created');
+
     // 8. Create Indexes
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_act_versions_act_id ON act_versions(act_id);
@@ -148,6 +161,7 @@ async function main() {
       CREATE INDEX IF NOT EXISTS idx_pr_changes_pr_id ON pr_changes(pull_request_id);
       CREATE INDEX IF NOT EXISTS idx_pr_comments_pr_id ON pr_comments(pull_request_id);
       CREATE INDEX IF NOT EXISTS idx_pr_ai_feedback_pr_id ON pr_ai_feedback(pull_request_id);
+      CREATE INDEX IF NOT EXISTS idx_pr_votes_pr_id ON pr_votes(pull_request_id);
     `);
     console.log('Indexes created');
 

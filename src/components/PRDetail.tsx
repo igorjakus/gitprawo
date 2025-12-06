@@ -28,6 +28,9 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
   const [submitingComment, setSubmitingComment] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [token, setToken] = useState<string | undefined>(serverToken);
+  const [likesCount, setLikesCount] = useState(0);
+  const [dislikesCount, setDislikesCount] = useState(0);
+  const [userVote, setUserVote] = useState<'like' | 'dislike' | null>(null);
 
   // Get token from localStorage if not provided from server
   useEffect(() => {
@@ -58,11 +61,14 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         ]);
 
         if (!prRes.ok) {
-          throw new Error('Nie udało się pobrać pull requesta');
+          throw new Error('Nie udało się pobrać propozycji zmian');
         }
 
         const prData = await prRes.json();
         setPr(prData);
+        setLikesCount(prData.likesCount || 0);
+        setDislikesCount(prData.dislikesCount || 0);
+        setUserVote(prData.userVote || null);
 
         if (changesRes.ok) {
           const changesData = await changesRes.json();
@@ -87,6 +93,46 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
     fetchData();
   }, [prId, token]);
+
+  const handleVote = async (voteType: 'like' | 'dislike') => {
+    if (!token) return;
+
+    try {
+      const res = await fetch(`/api/pull-requests/${prId}/vote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ voteType })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        // Update state based on action
+        if (data.action === 'added') {
+          if (voteType === 'like') setLikesCount(prev => prev + 1);
+          else setDislikesCount(prev => prev + 1);
+          setUserVote(voteType);
+        } else if (data.action === 'removed') {
+          if (voteType === 'like') setLikesCount(prev => prev - 1);
+          else setDislikesCount(prev => prev - 1);
+          setUserVote(null);
+        } else if (data.action === 'updated') {
+          if (voteType === 'like') {
+            setLikesCount(prev => prev + 1);
+            setDislikesCount(prev => prev - 1);
+          } else {
+            setLikesCount(prev => prev - 1);
+            setDislikesCount(prev => prev + 1);
+          }
+          setUserVote(voteType);
+        }
+      }
+    } catch (err) {
+      console.error('Error voting:', err);
+    }
+  };
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,7 +251,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
   }
 
   if (!pr) {
-    return <div className="text-gray-500">Pull request nie znaleziony</div>;
+    return <div className="text-gray-500">Propozycja zmian nie znaleziona</div>;
   }
 
   const getStatusColor = (status: string) => {
@@ -275,10 +321,38 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
           <p className="text-gray-700 mb-4">{pr.description}</p>
         )}
 
+        {/* Voting */}
+        <div className="flex items-center gap-4 mb-4">
+          <button
+            onClick={() => token && handleVote('like')}
+            disabled={!token}
+            className={`flex items-center gap-2 px-3 py-1 rounded border ${
+              userVote === 'like'
+                ? 'bg-green-100 border-green-300 text-green-700'
+                : 'bg-white border-gray-300 text-gray-600'
+            } ${token ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default opacity-70'}`}
+            title={!token ? 'Zaloguj się aby zagłosować' : ''}
+          >
+            👍 {likesCount}
+          </button>
+          <button
+            onClick={() => token && handleVote('dislike')}
+            disabled={!token}
+            className={`flex items-center gap-2 px-3 py-1 rounded border ${
+              userVote === 'dislike'
+                ? 'bg-red-100 border-red-300 text-red-700'
+                : 'bg-white border-gray-300 text-gray-600'
+            } ${token ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default opacity-70'}`}
+            title={!token ? 'Zaloguj się aby zagłosować' : ''}
+          >
+            👎 {dislikesCount}
+          </button>
+        </div>
+
         <div className="flex items-center justify-between text-sm text-gray-600 pt-4 border-t border-gray-200">
           <div>
-            <span className="font-medium">{pr.authorFirstName} {pr.authorLastName}</span> otworzył(a) to
-            pull request
+            <span className="font-medium">{pr.authorFirstName} {pr.authorLastName}</span> otworzył(a) tę
+            propozycję zmian
           </div>
           <div>
             {new Date(pr.createdAt).toLocaleDateString('pl-PL')}{' '}
@@ -288,7 +362,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
         {!pr.isPublic && (
           <div className="mt-4 p-3 bg-blue-50 text-blue-800 rounded text-sm">
-            🔒 Ten pull request jest prywatny i widoczny tylko dla zalogowanych
+            🔒 Ta propozycja zmian jest prywatna i widoczna tylko dla zalogowanych
             użytkowników
           </div>
         )}

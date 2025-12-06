@@ -59,6 +59,9 @@ export interface PullRequest {
   updatedAt: string;
   mergedAt?: string;
   mergedById?: number;
+  likesCount?: number;
+  dislikesCount?: number;
+  userVote?: 'like' | 'dislike' | null;
 }
 
 export interface PRChange {

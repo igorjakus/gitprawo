@@ -20,10 +20,10 @@ export default async function PRPage({ params }: PRPageProps) {
       <main className="min-h-screen bg-gray-50 py-12 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl font-bold text-red-600">
-            Nieprawidłowy ID pull requesta
+            Nieprawidłowy ID propozycji zmian
           </h1>
           <Link href="/pull-requests" className="text-blue-600 hover:underline">
-            Wróć do listy PR-ów
+            Wróć do listy propozycji
           </Link>
         </div>
       </main>
@@ -37,7 +37,7 @@ export default async function PRPage({ params }: PRPageProps) {
           href="/pull-requests"
           className="text-blue-600 hover:underline mb-6 inline-block"
         >
-          ← Wróć do listy PR-ów
+          ← Wróć do listy propozycji
         </Link>
 
         <PRDetail prId={prId} token={token} currentUserId={currentUserId} />
