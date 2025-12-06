@@ -27,7 +27,7 @@ export default function RootLayout({
                   System Monitorowania Legislacji
                 </div>
               </Link>
-              <nav className="flex space-x-6">
+              <nav className="flex items-center space-x-6">
                 <Link 
                   href="/" 
                   className="hover:text-blue-200 transition-colors"
