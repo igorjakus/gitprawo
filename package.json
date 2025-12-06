@@ -9,11 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.15.6",
     "bcrypt": "^6.0.0",
     "diff": "^8.0.2",
     "dotenv": "^17.2.3",
+    "jsonwebtoken": "^9.0.3",
     "next": "16.0.7",
+    "next-auth": "^4.24.13",
     "pg": "^8.16.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -23,13 +26,12 @@
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.19",
     "@types/bcrypt": "^6.0.0",
-    "@types/diff": "^8.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

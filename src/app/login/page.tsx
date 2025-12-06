@@ -40,6 +40,12 @@ function LoginForm() {
         throw new Error(data.error || 'Błąd logowania');
       }
 
+      // Save user to localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+      
+      // Emit custom event to notify other components
+      window.dispatchEvent(new Event('user-login'));
+      
       console.log('Login successful:', data.user);
       // Redirect to home page
       router.push('/');

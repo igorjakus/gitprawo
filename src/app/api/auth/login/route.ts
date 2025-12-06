@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/database';
 import bcrypt from 'bcrypt';
+import { createToken } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
@@ -38,8 +39,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Login successful
-    return NextResponse.json(
+    // Create JWT token
+    const token = createToken({
+      id: user.id,
+      login: user.login,
+      isAdmin: user.is_admin,
+      isExpert: user.is_expert
+    });
+
+    // Create response with cookie
+    const response = NextResponse.json(
       {
         message: 'Login successful',
         user: {
@@ -47,10 +56,21 @@ export async function POST(request: Request) {
           login: user.login,
           isAdmin: user.is_admin,
           isExpert: user.is_expert
-        }
+        },
+        token
       },
       { status: 200 }
     );
+
+    // Set secure HTTP-only cookie
+    response.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 // 7 days
+    });
+
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(
