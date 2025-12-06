@@ -1,10 +1,13 @@
 import PRList from '@/components/PRList';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { verifyToken, isExpert } from '@/lib/auth';
 
 export default async function PullRequestsPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get('auth-token')?.value;
+  const user = token ? verifyToken(token) : null;
+  const canCreatePR = user ? isExpert(user) : false;
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">
@@ -19,7 +22,7 @@ export default async function PullRequestsPage() {
         </div>
 
         <div className="mb-6">
-          {token ? (
+          {canCreatePR ? (
             <Link
               href="/pull-requests/new"
               className="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
@@ -28,10 +31,16 @@ export default async function PullRequestsPage() {
             </Link>
           ) : (
             <p className="text-amber-700 bg-amber-50 p-4 rounded">
-              <Link href="/login" className="font-medium hover:underline">
-                Zaloguj się
-              </Link>{' '}
-              aby utworzyć pull request (dostępne tylko dla ekspertów)
+              {!user ? (
+                <>
+                  <Link href="/login" className="font-medium hover:underline">
+                    Zaloguj się
+                  </Link>{' '}
+                  aby utworzyć pull request (dostępne tylko dla ekspertów)
+                </>
+              ) : (
+                <span>Tworzenie pull requestów jest dostępne tylko dla ekspertów</span>
+              )}
             </p>
           )}
         </div>
