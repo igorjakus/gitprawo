@@ -333,7 +333,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
             } ${token ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default opacity-70'}`}
             title={!token ? 'Zaloguj się aby zagłosować' : ''}
           >
-            👍 {likesCount}
+            Podoba mi się 👍 {likesCount}
           </button>
           <button
             onClick={() => token && handleVote('dislike')}
@@ -345,7 +345,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
             } ${token ? 'hover:bg-gray-50 cursor-pointer' : 'cursor-default opacity-70'}`}
             title={!token ? 'Zaloguj się aby zagłosować' : ''}
           >
-            👎 {dislikesCount}
+            Nie podoba mi się 👎 {dislikesCount}
           </button>
         </div>
 
