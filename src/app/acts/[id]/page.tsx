@@ -67,24 +67,39 @@ export default async function ActPage({
             </div>
           </div>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors">
-              Zobacz pełny tekst
-            </button>
             {act.versions[0] ? (
-              <a
-                href={`/api/acts/${act.id}/versions/${act.versions[0].id}`}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
-                download
-              >
-                Eksportuj
-              </a>
+              <>
+                <a
+                  href={`/api/acts/${act.id}/versions/${act.versions[0].id}?view=true`}
+                  className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Zobacz pełny tekst
+                </a>
+                <a
+                  href={`/api/acts/${act.id}/versions/${act.versions[0].id}`}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
+                  download
+                >
+                  Pobierz
+                </a>
+              </>
             ) : (
-              <button
-                className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded cursor-not-allowed"
-                disabled
-              >
-                Eksportuj
-              </button>
+              <>
+                <button
+                  className="px-4 py-2 text-sm font-medium text-gray-400 bg-blue-50 rounded cursor-not-allowed"
+                  disabled
+                >
+                  Zobacz pełny tekst
+                </button>
+                <button
+                  className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded cursor-not-allowed"
+                  disabled
+                >
+                  Pobierz
+                </button>
+              </>
             )}
           </div>
         </div>

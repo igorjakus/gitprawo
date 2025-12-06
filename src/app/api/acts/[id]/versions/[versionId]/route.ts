@@ -13,10 +13,12 @@ function slugify(input: string): string {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: { id: string; versionId: string } }
 ) {
   const { id, versionId } = await params;
+  const url = new URL(request.url);
+  const view = url.searchParams.get('view') === 'true';
 
   const act = await getActById(id);
   if (!act) {
@@ -37,11 +39,18 @@ export async function GET(
   const versionPart = slugify(version.version) || 'version';
   const filename = `${namePart}-${versionPart}.md`;
 
-  return new NextResponse(content, {
-    headers: {
-      'Content-Type': 'text/markdown; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${filename}"`,
-      'Cache-Control': 'no-store',
-    },
-  });
+  const headers: Record<string, string> = {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Cache-Control': 'no-store',
+  };
+
+  if (view) {
+    // Display in browser
+    headers['Content-Disposition'] = `inline; filename="${filename}"`;
+  } else {
+    // Download file
+    headers['Content-Disposition'] = `attachment; filename="${filename}"`;
+  }
+
+  return new NextResponse(content, { headers });
 }

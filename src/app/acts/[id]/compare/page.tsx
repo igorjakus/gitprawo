@@ -97,18 +97,19 @@ export default async function ComparePage({
         </Link>
         <div className="flex space-x-3">
           <a
+            href={`/api/acts/${actId}/versions/${toVersion.id}?view=true`}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Zobacz pełny tekst
+          </a>
+          <a
             href={`/api/acts/${actId}/versions/${toVersion.id}`}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
             download
           >
-            Pobierz Markdown
-          </a>
-          <a
-            href={`/api/acts/${actId}/versions/${toVersion.id}`}
-            className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors"
-            download
-          >
-            Zobacz pełny tekst
+            Pobierz
           </a>
         </div>
       </div>
