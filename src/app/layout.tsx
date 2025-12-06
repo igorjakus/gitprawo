@@ -14,6 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl" style={{ background: '#fff' }}>
+      <head>
+        <link rel="icon" href="/icon.png" type="image/png" />
+      </head>
       <body className="bg-white text-gray-900 antialiased" style={{ background: '#fff' }}>
         <header className="bg-[#1e3a8a] text-white shadow-md">
           <div className="container mx-auto px-4 py-4">
