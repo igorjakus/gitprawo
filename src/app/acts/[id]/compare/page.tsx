@@ -2,41 +2,68 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { DiffLine } from '../../../../types';
 import DiffViewer from '../../../../components/DiffViewer';
-
-// Mock diff data
-const mockDiffs: Record<string, DiffLine[]> = {
-  'v1-v2': [
-    { type: 'unchanged', content: 'Art. 1. [Podstawy stosunków cywilnoprawnych]', lineNumber: 1 },
-    { type: 'unchanged', content: 'Kodeks cywilny normuje stosunki cywilnoprawne między osobami fizycznymi i prawnymi.', lineNumber: 2 },
-    { type: 'unchanged', content: '', lineNumber: 3 },
-    { type: 'unchanged', content: 'Art. 2. [Zasada ochrony konsumenta]', lineNumber: 4 },
-    { type: 'removed', content: '§ 1. Konsument jest chroniony na zasadach określonych w niniejszym kodeksie.', lineNumber: 5 },
-    { type: 'added', content: '§ 1. Konsument podlega szczególnej ochronie prawnej zgodnie z przepisami niniejszego kodeksu oraz regulacjami UE.', lineNumber: 6 },
-    { type: 'removed', content: '§ 2. Przez konsumenta rozumie się osobę fizyczną.', lineNumber: 7 },
-    { type: 'added', content: '§ 2. Przez konsumenta rozumie się osobę fizyczną dokonującą czynności prawnej niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.', lineNumber: 8 },
-    { type: 'unchanged', content: '', lineNumber: 9 },
-    { type: 'unchanged', content: 'Art. 3. [Zdolność prawna]', lineNumber: 10 },
-    { type: 'unchanged', content: 'Każdy człowiek od chwili urodzenia ma zdolność prawną.', lineNumber: 11 },
-  ],
-  'v2-v3': [
-    { type: 'unchanged', content: 'Art. 15. [Umowy elektroniczne]', lineNumber: 150 },
-    { type: 'removed', content: '§ 1. Umowa zawarta drogą elektroniczną jest ważna, jeżeli strony postanowiły tak uczynić.', lineNumber: 151 },
-    { type: 'added', content: '§ 1. Umowa zawarta drogą elektroniczną jest równoważna z umową zawartą w formie pisemnej, chyba że przepis szczególny stanowi inaczej.', lineNumber: 152 },
-    { type: 'added', content: '§ 2. Za moment zawarcia umowy drogą elektroniczną uznaje się moment, w którym oferta doszła do oferenta w sposób umożliwiający zapoznanie się z jej treścią.', lineNumber: 153 },
-    { type: 'unchanged', content: '', lineNumber: 154 },
-    { type: 'added', content: 'Art. 15a. [Podpis elektroniczny]', lineNumber: 155 },
-    { type: 'added', content: '§ 1. Dokument w postaci elektronicznej opatrzony kwalifikowanym podpisem elektronicznym jest równoważny z dokumentem w postaci papierowej opatrzonym podpisem własnoręcznym.', lineNumber: 156 },
-    { type: 'added', content: '§ 2. Dokument elektroniczny może być również uwierzytelniony za pomocą innych środków identyfikacji elektronicznej, jeżeli zapewniają one porównywalny poziom bezpieczeństwa.', lineNumber: 157 },
-    { type: 'unchanged', content: '', lineNumber: 158 },
-    { type: 'unchanged', content: 'Art. 16. [Forma szczególna]', lineNumber: 159 },
-    { type: 'unchanged', content: 'Czynność prawna wymaga formy szczególnej tylko wtedy, gdy przepis prawa tak stanowi.', lineNumber: 160 },
-  ],
-};
+import { getDiff } from '../../../../lib/get_diff';
 
 const mockVersionData = {
-  v1: { version: 'v1.2.1', date: '2024-01-01', title: 'Poprawki techniczne' },
-  v2: { version: 'v1.2.2', date: '2024-06-10', title: 'Ochrona konsumentów' },
-  v3: { version: 'v1.2.3', date: '2024-11-15', title: 'Umowy elektroniczne' },
+  v1: { 
+    version: 'v1.2.1', 
+    date: '2024-01-01', 
+    title: 'Poprawki techniczne',
+    content: `Art. 1. [Podstawy stosunków cywilnoprawnych]
+Kodeks cywilny normuje stosunki cywilnoprawne między osobami fizycznymi i prawnymi.
+
+Art. 2. [Zasada ochrony konsumenta]
+§ 1. Konsument jest chroniony na zasadach określonych w niniejszym kodeksie.
+§ 2. Przez konsumenta rozumie się osobę fizyczną.
+
+Art. 3. [Zdolność prawna]
+Każdy człowiek od chwili urodzenia ma zdolność prawną.`
+  },
+  v2: { 
+    version: 'v1.2.2', 
+    date: '2024-06-10', 
+    title: 'Ochrona konsumentów',
+    content: `Art. 1. [Podstawy stosunków cywilnoprawnych]
+Kodeks cywilny normuje stosunki cywilnoprawne między osobami fizycznymi i prawnymi.
+
+Art. 2. [Zasada ochrony konsumenta]
+§ 1. Konsument podlega szczególnej ochronie prawnej zgodnie z przepisami niniejszego kodeksu oraz regulacjami UE.
+§ 2. Przez konsumenta rozumie się osobę fizyczną dokonującą czynności prawnej niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.
+
+Art. 3. [Zdolność prawna]
+Każdy człowiek od chwili urodzenia ma zdolność prawną.
+
+Art. 15. [Umowy elektroniczne]
+§ 1. Umowa zawarta drogą elektroniczną jest ważna, jeżeli strony postanowiły tak uczynić.
+
+Art. 16. [Forma szczególna]
+Czynność prawna wymaga formy szczególnej tylko wtedy, gdy przepis prawa tak stanowi.`
+  },
+  v3: { 
+    version: 'v1.2.3', 
+    date: '2024-11-15', 
+    title: 'Umowy elektroniczne',
+    content: `Art. 1. [Podstawy stosunków cywilnoprawnych]
+Kodeks cywilny normuje stosunki cywilnoprawne między osobami fizycznymi i prawnymi.
+
+Art. 2. [Zasada ochrony konsumenta]
+§ 1. Konsument podlega szczególnej ochronie prawnej zgodnie z przepisami niniejszego kodeksu oraz regulacjami UE.
+§ 2. Przez konsumenta rozumie się osobę fizyczną dokonującą czynności prawnej niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.
+
+Art. 3. [Zdolność prawna]
+Każdy człowiek od chwili urodzenia ma zdolność prawną.
+
+Art. 15. [Umowy elektroniczne]
+§ 1. Umowa zawarta drogą elektroniczną jest równoważna z umową zawartą w formie pisemnej, chyba że przepis szczególny stanowi inaczej.
+§ 2. Za moment zawarcia umowy drogą elektroniczną uznaje się moment, w którym oferta doszła do oferenta w sposób umożliwiający zapoznanie się z jej treścią.
+
+Art. 15a. [Podpis elektroniczny]
+§ 1. Dokument w postaci elektronicznej opatrzony kwalifikowanym podpisem elektronicznym jest równoważny z dokumentem w postaci papierowej opatrzonym podpisem własnoręcznym.
+§ 2. Dokument elektroniczny może być również uwierzytelniony za pomocą innych środków identyfikacji elektronicznej, jeżeli zapewniają one porównywalny poziom bezpieczeństwa.
+
+Art. 16. [Forma szczególna]
+Czynność prawna wymaga formy szczególnej tylko wtedy, gdy przepis prawa tak stanowi.`
+  },
 };
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
@@ -66,27 +93,7 @@ export default async function ComparePage({
   }
 
   // Get diff data
-  const diffKey = `${fromId}-${toId}`;
-  const reverseDiffKey = `${toId}-${fromId}`;
-  let diffLines = mockDiffs[diffKey];
-
-  // If reverse diff exists, swap added/removed
-  if (!diffLines && mockDiffs[reverseDiffKey]) {
-    diffLines = mockDiffs[reverseDiffKey].map((line) => ({
-      ...line,
-      type:
-        line.type === 'added'
-          ? 'removed'
-          : line.type === 'removed'
-            ? 'added'
-            : line.type,
-    })) as DiffLine[];
-  }
-
-  // If no diff found, show empty state
-  if (!diffLines) {
-    diffLines = [];
-  }
+  const diffLines = getDiff(fromVersion.content, toVersion.content);
 
   return (
     <div className="container mx-auto px-4 py-8">
