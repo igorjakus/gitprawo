@@ -1,178 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Act } from '../../../types';
 import LegislativeTrain from '../../../components/LegislativeTrain';
 import VersionHistory from '../../../components/VersionHistory';
-
-// Mock data - same as in page.tsx
-const mockActs: Act[] = [
-  {
-    id: '1',
-    title: 'Ustawa z dnia 23 kwietnia 1964 r. - Kodeks cywilny',
-    shortTitle: 'Kodeks cywilny',
-    type: 'ustawa',
-    publishDate: '1964-04-23',
-    effectiveDate: '1964-01-01',
-    status: 'active',
-    description: 'Podstawowy akt prawny regulujący stosunki cywilnoprawne w Polsce',
-    versions: [
-      {
-        id: 'v3',
-        version: 'v1.2.3',
-        date: '2024-11-15',
-        author: 'Sejm RP',
-        commitMessage: 'Nowelizacja dotycząca umów elektronicznych',
-        changes: 45,
-        additions: 30,
-        deletions: 15,
-      },
-      {
-        id: 'v2',
-        version: 'v1.2.2',
-        date: '2024-06-10',
-        author: 'Sejm RP',
-        commitMessage: 'Aktualizacja przepisów o ochronie konsumentów',
-        changes: 23,
-        additions: 18,
-        deletions: 5,
-      },
-      {
-        id: 'v1',
-        version: 'v1.2.1',
-        date: '2024-01-01',
-        author: 'Sejm RP',
-        commitMessage: 'Poprawki techniczne i doprecyzowanie artykułów',
-        changes: 12,
-        additions: 8,
-        deletions: 4,
-      },
-    ],
-    legislativeStages: [
-      {
-        name: 'Projekt',
-        status: 'completed',
-        date: '2024-10-01',
-      },
-      {
-        name: 'Komisja',
-        status: 'completed',
-        date: '2024-10-15',
-      },
-      {
-        name: 'Sejm',
-        status: 'completed',
-        date: '2024-11-01',
-      },
-      {
-        name: 'Senat',
-        status: 'completed',
-        date: '2024-11-10',
-      },
-      {
-        name: 'Publikacja',
-        status: 'completed',
-        date: '2024-11-15',
-      },
-    ],
-  },
-  {
-    id: '2',
-    title: 'Ustawa z dnia 6 czerwca 1997 r. - Kodeks karny',
-    shortTitle: 'Kodeks karny',
-    type: 'ustawa',
-    publishDate: '1997-06-06',
-    effectiveDate: '1997-09-01',
-    status: 'active',
-    description: 'Podstawowy akt prawny prawa karnego w Polsce',
-    versions: [
-      {
-        id: 'v2',
-        version: 'v2.1.0',
-        date: '2024-09-20',
-        author: 'Sejm RP',
-        commitMessage: 'Zaostrzenie kar za przestępstwa w cyberprzestrzeni',
-        changes: 67,
-        additions: 52,
-        deletions: 15,
-      },
-    ],
-    legislativeStages: [
-      {
-        name: 'Projekt',
-        status: 'completed',
-        date: '2024-08-01',
-      },
-      {
-        name: 'Komisja',
-        status: 'completed',
-        date: '2024-08-20',
-      },
-      {
-        name: 'Sejm',
-        status: 'in-progress',
-        date: '2024-09-05',
-      },
-      {
-        name: 'Senat',
-        status: 'pending',
-      },
-      {
-        name: 'Publikacja',
-        status: 'pending',
-      },
-    ],
-  },
-  {
-    id: '3',
-    title: 'Ustawa z dnia 2 kwietnia 1997 r. - Konstytucja Rzeczypospolitej Polskiej',
-    shortTitle: 'Konstytucja RP',
-    type: 'konstytucja',
-    publishDate: '1997-04-02',
-    effectiveDate: '1997-10-17',
-    status: 'active',
-    description: 'Ustawa zasadnicza Rzeczypospolitej Polskiej',
-    versions: [
-      {
-        id: 'v1',
-        version: 'v1.0.0',
-        date: '1997-04-02',
-        author: 'Zgromadzenie Narodowe',
-        commitMessage: 'Uchwalenie Konstytucji RP',
-        changes: 243,
-      },
-    ],
-    legislativeStages: [
-      {
-        name: 'Projekt',
-        status: 'completed',
-        date: '1997-01-15',
-      },
-      {
-        name: 'ZN',
-        status: 'completed',
-        date: '1997-04-02',
-        description: 'Uchwalona przez Zgromadzenie Narodowe',
-      },
-      {
-        name: 'Referendum',
-        status: 'completed',
-        date: '1997-05-25',
-        description: 'Przyjęta w referendum ogólnokrajowym',
-      },
-      {
-        name: 'Publikacja',
-        status: 'completed',
-        date: '1997-07-16',
-      },
-    ],
-  },
-];
-
-async function getAct(id: string): Promise<Act | null> {
-  // Later: fetch from database
-  const act = mockActs.find((a) => a.id === id);
-  return act || null;
-}
+import { getActById } from '../../../lib/acts';
 
 export default async function ActPage({
   params,
@@ -180,7 +10,7 @@ export default async function ActPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const act = await getAct(id);
+  const act = await getActById(id);
 
   if (!act) {
     notFound();
@@ -209,10 +39,12 @@ export default async function ActPage({
                 className={`px-3 py-1 text-sm font-medium rounded ${
                   act.status === 'active'
                     ? 'text-green-700 bg-green-50'
-                    : 'text-gray-700 bg-gray-50'
+                    : act.status === 'draft'
+                      ? 'text-yellow-700 bg-yellow-50'
+                      : 'text-gray-700 bg-gray-50'
                 }`}
               >
-                {act.status === 'active' ? 'Aktywny' : act.status}
+                {act.status === 'active' ? 'Aktywny' : act.status === 'draft' ? 'Projekt' : 'Archiwalny'}
               </span>
               <span className="text-sm text-gray-500">
                 Wersja {act.versions[0]?.version || 'N/A'}
@@ -228,15 +60,6 @@ export default async function ActPage({
                 <span className="font-medium">Data publikacji:</span>{' '}
                 {act.publishDate}
               </div>
-              {act.effectiveDate && (
-                <>
-                  <span>•</span>
-                  <div>
-                    <span className="font-medium">Data wejścia w życie:</span>{' '}
-                    {act.effectiveDate}
-                  </div>
-                </>
-              )}
               <span>•</span>
               <div>
                 <span className="font-medium">Wersje:</span> {act.versions.length}
