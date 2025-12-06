@@ -40,6 +40,12 @@ export default function RootLayout({
                 >
                   O projekcie
                 </Link>
+                <Link 
+                  href="/login" 
+                  className="bg-white text-[#1e3a8a] px-4 py-2 rounded-md hover:bg-blue-50 transition-colors font-medium text-sm"
+                >
+                  Zaloguj się
+                </Link>
               </nav>
             </div>
           </div>
