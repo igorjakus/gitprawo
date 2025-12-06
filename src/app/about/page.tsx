@@ -19,6 +19,8 @@ export default function AboutPage() {
           Kontakt:
           <a href="mailto:igorjakus@protonmail.com" className="text-[#1e3a8a] underline ml-1">igorjakus@protonmail.com</a>
           <span className="mx-1">|</span>
+          <a href="mailto:goralska.aneta.pl@gmail.com" className="text-[#1e3a8a] underline">goralska.aneta.pl@gmail.com</a>
+          <span className="mx-1">|</span>
           <a href="mailto:berlickihubert@gmail.com" className="text-[#1e3a8a] underline">berlickihubert@gmail.com</a>
         </p>
       </div>
