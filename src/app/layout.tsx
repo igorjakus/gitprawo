@@ -50,10 +50,10 @@ export default function RootLayout({
             <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
               <p>© 2025 GitPrawo - Otwarty system monitorowania legislacji</p>
                 <div className="flex space-x-4 mt-2 md:mt-0">
-                  <a href="#" className="hover:text-[#1e3a8a] transition-colors">
-                    Kontakt
-                  </a>
-                  <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                  <Link href="/about" className="hover:text-[#1e3a8a] transition-colors flex items-center">
+                    O projekcie
+                  </Link>
+                  <a href="https://github.com/igorjakus/gitprawo" target="_blank" rel="noopener noreferrer" className="hover:text-[#1e3a8a] transition-colors flex items-center">
                     GitHub
                   </a>
                 </div>
