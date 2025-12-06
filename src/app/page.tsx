@@ -1,6 +1,8 @@
-import Image from "next/image";
+import fs from 'fs/promises';
+import path from 'path';
+import ReactMarkdown from 'react-markdown';
 
-export default function Home() {
+export default async function Home() {
   const articles = [
     { id: 1, title: "Artykul 1", link: "/posts/post-1" },
     { id: 2, title: "Artykul 2", link: "/posts/post-2" },
@@ -8,11 +10,15 @@ export default function Home() {
     { id: 4, title: "Artykul 4", link: "/posts/post-4" },
   ];
 
+  const markdownPath = path.join(process.cwd(), 'public', 'laws', 'kodeks_cywilny.md');
+  const markdownContent = await fs.readFile(markdownPath, 'utf-8');
+  const preview = markdownContent.slice(0, 500) + '...';
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-start py-16 px-16 bg-white dark:bg-black sm:items-start">
         <h2 className="text-3xl font-bold mb-6">GitPrawo</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {articles.map((post) => (
             <a
               key={post.id}
@@ -25,6 +31,9 @@ export default function Home() {
               </p>
             </a>
           ))}
+        </div>
+        <div className="prose dark:prose-invert w-full border-t pt-10">
+          <ReactMarkdown>{preview}</ReactMarkdown>
         </div>
       </main>
     </div>

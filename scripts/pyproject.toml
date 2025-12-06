@@ -1,0 +1,13 @@
+[project]
+name = "gitprawo-scraper"
+version = "0.1.0"
+description = "Scraper aktów prawnych z ISAP do Markdown"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests",
+    "beautifulsoup4",
+    "markdownify",
+    "lxml",
+    "pdfplumber",
+]
