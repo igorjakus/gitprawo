@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { PullRequest, PRChange, PRComment } from '@/types';
+import { PullRequest, PRChange, PRComment, PRAIFeedback } from '@/types';
 import EditPRModal from './EditPR';
 import AddPRChangeForm from './AddPRChangeForm';
 import DiffViewer from './DiffViewer';
@@ -17,9 +17,12 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
   const [pr, setPr] = useState<PullRequest | null>(null);
   const [changes, setChanges] = useState<PRChange[]>([]);
   const [comments, setComments] = useState<PRComment[]>([]);
+  const [aiFeedback, setAiFeedback] = useState<PRAIFeedback | null>(null);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
   const [commentError, setCommentError] = useState<string | null>(null);
   const [submitingComment, setSubmitingComment] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -46,10 +49,11 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const [prRes, changesRes, commentsRes] = await Promise.all([
+        const [prRes, changesRes, commentsRes, aiRes] = await Promise.all([
           fetch(`/api/pull-requests/${prId}`, { headers }),
           fetch(`/api/pull-requests/${prId}/changes`, { headers }),
           fetch(`/api/pull-requests/${prId}/comments`, { headers }),
+          fetch(`/api/pull-requests/${prId}/ai-feedback`, { headers }),
         ]);
 
         if (!prRes.ok) {
@@ -67,6 +71,11 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         if (commentsRes.ok) {
           const commentsData = await commentsRes.json();
           setComments(commentsData);
+        }
+
+        if (aiRes.ok) {
+          const aiData = await aiRes.json();
+          setAiFeedback(aiData);
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
@@ -121,6 +130,37 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
       );
     } finally {
       setSubmitingComment(false);
+    }
+  };
+
+  const handleGenerateAI = async () => {
+    setAiError(null);
+    setAiLoading(true);
+
+    try {
+      if (!token) {
+        throw new Error('Musisz być zalogowany aby wygenerować feedback AI');
+      }
+
+      const res = await fetch(`/api/pull-requests/${prId}/ai-feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Nie udało się wygenerować feedbacku AI');
+      }
+
+      const aiData = await res.json();
+      setAiFeedback(aiData);
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setAiLoading(false);
     }
   };
 
@@ -267,11 +307,73 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
               if (res.ok) {
                 setChanges(await res.json());
               }
+              // refresh AI feedback if it existed
+              const ai = await fetch(`/api/pull-requests/${prId}/ai-feedback`, { headers });
+              if (ai.ok) {
+                setAiFeedback(await ai.json());
+              }
             };
             fetchChanges();
           }}
         />
       )}
+
+      {/* AI Feedback */}
+      <div className="bg-gradient-to-r from-sky-50 via-white to-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold">
+              ✦
+            </div>
+            <div>
+              <p className="text-sm uppercase tracking-wide text-indigo-700 font-semibold">Gemini AI</p>
+              <h2 className="text-xl font-bold text-gray-900">Opinia AI</h2>
+            </div>
+          </div>
+
+          {aiFeedback && (
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                aiFeedback.approved
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'bg-red-100 text-red-800'
+              }`}
+            >
+              {aiFeedback.approved ? 'Zatwierdzone' : 'Wymaga poprawek'}
+            </span>
+          )}
+        </div>
+
+        {aiError && (
+          <div className="mb-3 p-3 bg-red-100 text-red-800 rounded text-sm">
+            {aiError}
+          </div>
+        )}
+
+        {aiFeedback ? (
+          <div className="bg-white border border-indigo-100 rounded-lg p-4 shadow-sm">
+            <p className="text-gray-800 whitespace-pre-wrap">{aiFeedback.message}</p>
+            <p className="mt-3 text-xs text-gray-500">
+              Wygenerowano: {new Date(aiFeedback.createdAt).toLocaleString('pl-PL')}
+            </p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-4 bg-white border border-dashed border-indigo-200 rounded-lg p-4">
+            <div>
+              <p className="text-gray-800 font-medium">Brak jeszcze opinii AI</p>
+              <p className="text-sm text-gray-600">Wygeneruj automatyczny feedback w stylu code review dla tekstu prawnego.</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleGenerateAI}
+              disabled={aiLoading || !token}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {aiLoading ? 'Generuję...' : 'Wygeneruj feedback'}
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Comments */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">

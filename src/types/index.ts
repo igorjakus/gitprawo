@@ -81,6 +81,14 @@ export interface PRComment {
   updatedAt: string;
 }
 
+export interface PRAIFeedback {
+  id: number;
+  pullRequestId: number;
+  message: string;
+  approved: boolean;
+  createdAt: string;
+}
+
 export interface AIFeedback {
   message: string;
   approved: boolean;
