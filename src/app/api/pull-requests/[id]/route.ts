@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/database';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, isAdmin } from '@/lib/auth';
 import { PullRequest } from '@/types';
 
 // GET single pull request
@@ -23,7 +23,8 @@ export async function GET(
         pr.title,
         pr.description,
         pr.author_id as "authorId",
-        u.login as "authorLogin",
+        u.first_name as "authorFirstName",
+        u.last_name as "authorLastName",
         pr.status,
         pr.is_public as "isPublic",
         pr.created_at as "createdAt",
@@ -107,7 +108,7 @@ export async function PATCH(
     }
 
     const prAuthorId = prResult.rows[0].author_id;
-    if (prAuthorId !== user.id && !user.isAdmin) {
+    if (prAuthorId !== user.id && !isAdmin(user)) {
       return NextResponse.json(
         { error: 'You can only edit your own pull requests' },
         { status: 403 }
@@ -219,7 +220,7 @@ export async function DELETE(
     }
 
     const prAuthorId = prResult.rows[0].author_id;
-    if (prAuthorId !== user.id && !user.isAdmin) {
+    if (prAuthorId !== user.id && !isAdmin(user)) {
       return NextResponse.json(
         { error: 'You can only delete your own pull requests' },
         { status: 403 }

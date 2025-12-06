@@ -14,7 +14,7 @@ async function main() {
     await client.query('BEGIN');
 
     // Check if we have users and acts
-    const usersResult = await client.query('SELECT id FROM users WHERE is_expert = true LIMIT 1');
+    const usersResult = await client.query("SELECT id FROM users WHERE role = 'expert' OR role = 'admin' LIMIT 1");
     const actsResult = await client.query('SELECT id FROM acts LIMIT 1');
 
     if (usersResult.rows.length === 0) {
@@ -29,7 +29,7 @@ async function main() {
     const actId = actsResult.rows[0].id;
 
     // Get a regular user for comments
-    const regularUserResult = await client.query('SELECT id FROM users WHERE is_default = true LIMIT 1');
+    const regularUserResult = await client.query("SELECT id FROM users WHERE role = 'default' LIMIT 1");
     const regularUserId = regularUserResult.rows[0]?.id || expertUserId;
 
     // Seed Pull Requests

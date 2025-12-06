@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { Pool } from 'pg';
+import bcrypt from 'bcrypt';
 
 if (!process.env.DATABASE_URL) throw new Error('Missing DATABASE_URL');
 
@@ -19,10 +20,10 @@ async function main() {
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         login VARCHAR(50) NOT NULL UNIQUE,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
         hash_pass TEXT NOT NULL,
-        is_admin BOOLEAN DEFAULT FALSE,
-        is_expert BOOLEAN DEFAULT FALSE,
-        is_default BOOLEAN DEFAULT TRUE,
+        role VARCHAR(20) NOT NULL DEFAULT 'default' CHECK (role IN ('default', 'expert', 'admin')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -140,14 +141,16 @@ async function main() {
     // 6. Create Seed Users
     const userCheck = await client.query('SELECT count(*) FROM users');
     if (parseInt(userCheck.rows[0].count) === 0) {
-      // Note: In production, hash these passwords with bcrypt!
+      // Hash password 'secret' with bcrypt
+      const hashedPassword = await bcrypt.hash('secret', 10);
+      
       await client.query(`
-        INSERT INTO users (login, hash_pass, is_admin, is_expert, is_default) VALUES 
-        ('admin_user',  'secret', true,  false, false),
-        ('expert_user', 'secret', false, true,  false),
-        ('norm_user',   'secret', false, false, true),
-        ('super_user',  'secret', true,  true,  true);
-      `);
+        INSERT INTO users (login, first_name, last_name, hash_pass, role) VALUES 
+        ('jan.nowak@example.com', 'Jan', 'Nowak', $1, 'admin'),
+        ('anna.kowalska@example.com', 'Anna', 'Kowalska', $1, 'expert'),
+        ('piotr.lewandowski@example.com', 'Piotr', 'Lewandowski', $1, 'default'),
+        ('maria.wisniewski@example.com', 'Maria', 'Wiśniewska', $1, 'admin');
+      `, [hashedPassword]);
       console.log('Default users created');
     }
 

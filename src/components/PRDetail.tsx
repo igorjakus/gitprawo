@@ -28,13 +28,8 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     if (!token && typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
-        console.log('PRDetail: Token loaded from localStorage');
         setToken(storedToken);
-      } else {
-        console.log('PRDetail: No token found in localStorage');
       }
-    } else if (token) {
-      console.log('PRDetail: Token provided from server');
     }
   }, [token]);
 
@@ -47,9 +42,6 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
         if (token) {
           headers['Authorization'] = `Bearer ${token}`;
-          console.log('PRDetail: Using token for API request');
-        } else {
-          console.log('PRDetail: No token available for API request');
         }
 
         const [prRes, changesRes, commentsRes] = await Promise.all([
@@ -88,12 +80,8 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     e.preventDefault();
     setCommentError(null);
 
-    console.log('handleAddComment: token =', token ? 'present' : 'missing');
-    console.log('handleAddComment: newComment =', newComment);
-
     if (!token) {
       setCommentError('Musisz być zalogowany aby dodać komentarz');
-      console.error('handleAddComment: No token available');
       return;
     }
 
@@ -105,7 +93,6 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     setSubmitingComment(true);
 
     try {
-      console.log('handleAddComment: Sending request to /api/pull-requests/' + prId + '/comments');
       const response = await fetch(
         `/api/pull-requests/${prId}/comments`,
         {
@@ -118,20 +105,15 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         }
       );
 
-      console.log('handleAddComment: Response status =', response.status);
-
       if (!response.ok) {
         const data = await response.json();
-        console.error('handleAddComment: Error response =', data);
         throw new Error(data.error || 'Nie udało się dodać komentarza');
       }
 
       const comment = await response.json();
-      console.log('handleAddComment: Comment added successfully', comment);
       setComments([...comments, comment]);
       setNewComment('');
     } catch (err) {
-      console.error('handleAddComment: Exception =', err);
       setCommentError(
         err instanceof Error ? err.message : 'Unknown error'
       );
@@ -221,7 +203,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
         <div className="flex items-center justify-between text-sm text-gray-600 pt-4 border-t border-gray-200">
           <div>
-            <span className="font-medium">{pr.authorLogin}</span> otworzył(a) to
+            <span className="font-medium">{pr.authorFirstName} {pr.authorLastName}</span> otworzył(a) to
             pull request
           </div>
           <div>
@@ -320,12 +302,6 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
             </div>
           )}
 
-          {/* Debug info */}
-          <div className="mb-3 p-2 bg-blue-50 text-blue-800 rounded text-xs">
-            Debug: Token = {token ? '✓ Present' : '✗ Missing'} | 
-            localStorage.token = {typeof window !== 'undefined' && localStorage.getItem('token') ? '✓ Present' : '✗ Missing'}
-          </div>
-
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -360,7 +336,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium text-gray-800">
-                    {comment.authorLogin}
+                    {comment.authorFirstName} {comment.authorLastName}
                   </span>
                   <span className="text-xs text-gray-500">
                     {new Date(comment.createdAt).toLocaleDateString('pl-PL')}{' '}

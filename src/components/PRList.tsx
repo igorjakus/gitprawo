@@ -150,7 +150,7 @@ export default function PRList({
 
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>
-              Autor: <span className="font-medium">{pr.authorLogin}</span>
+              Autor: <span className="font-medium">{pr.authorFirstName} {pr.authorLastName}</span>
             </span>
             <span>
               {pr.actTitle && (
@@ -159,9 +159,10 @@ export default function PRList({
                 </span>
               )}
             </span>
-            <span>
-              {new Date(pr.createdAt).toLocaleDateString('pl-PL')}
-            </span>
+          </div>
+
+          <div className="text-xs text-gray-400 mt-2">
+            {new Date(pr.createdAt).toLocaleDateString('pl-PL')}
           </div>
         </div>
       ))}

@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/database';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, isExpert, isAdmin } from '@/lib/auth';
 import { PRChange } from '@/types';
 
 // GET all changes for a pull request
@@ -53,7 +53,7 @@ export async function POST(
     }
 
     const user = verifyToken(token);
-    if (!user || !user.isExpert) {
+    if (!user || !isExpert(user)) {
       return NextResponse.json(
         { error: 'Only experts can add changes to pull requests' },
         { status: 403 }
@@ -85,7 +85,7 @@ export async function POST(
     }
 
     const prAuthorId = prResult.rows[0].author_id;
-    if (prAuthorId !== user.id && !user.isAdmin) {
+    if (prAuthorId !== user.id && !isAdmin(user)) {
       return NextResponse.json(
         { error: 'You can only modify your own pull requests' },
         { status: 403 }

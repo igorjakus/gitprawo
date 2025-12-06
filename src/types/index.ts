@@ -51,7 +51,8 @@ export interface PullRequest {
   title: string;
   description?: string;
   authorId: number;
-  authorLogin?: string;
+  authorFirstName?: string;
+  authorLastName?: string;
   status: PRStatus;
   isPublic: boolean;
   createdAt: string;
@@ -73,7 +74,8 @@ export interface PRComment {
   id: number;
   pullRequestId: number;
   authorId: number;
-  authorLogin?: string;
+  authorFirstName?: string;
+  authorLastName?: string;
   content: string;
   createdAt: string;
   updatedAt: string;

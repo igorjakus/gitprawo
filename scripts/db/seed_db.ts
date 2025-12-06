@@ -14,7 +14,7 @@ async function main() {
     await client.query('BEGIN');
 
     // Get default user as author
-    const userResult = await client.query('SELECT id FROM users WHERE login = $1', ['norm_user']);
+    const userResult = await client.query('SELECT id FROM users WHERE login = $1', ['piotr.lewandowski@example.com']);
     const authorId = userResult.rows[0].id;
 
     // 1. Insert Kodeks Cywilny

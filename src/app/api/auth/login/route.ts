@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
     // Find user
     const result = await db.query(
-      'SELECT id, login, hash_pass, is_admin, is_expert FROM users WHERE login = $1',
+      'SELECT id, login, hash_pass, role FROM users WHERE login = $1',
       [email]
     );
 
@@ -43,8 +43,7 @@ export async function POST(request: Request) {
     const token = createToken({
       id: user.id,
       login: user.login,
-      isAdmin: user.is_admin,
-      isExpert: user.is_expert
+      role: user.role
     });
 
     // Create response with cookie
@@ -54,8 +53,7 @@ export async function POST(request: Request) {
         user: {
           id: user.id,
           login: user.login,
-          isAdmin: user.is_admin,
-          isExpert: user.is_expert
+          role: user.role
         },
         token
       },

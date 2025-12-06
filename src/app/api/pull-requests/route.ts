@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/database';
-import { verifyToken } from '@/lib/auth';
+import { verifyToken, isExpert } from '@/lib/auth';
 import { PullRequest } from '@/types';
 
 // GET all pull requests (with visibility rules)
@@ -22,7 +22,8 @@ export async function GET(request: NextRequest) {
         pr.title,
         pr.description,
         pr.author_id as "authorId",
-        u.login as "authorLogin",
+        u.first_name as "authorFirstName",
+        u.last_name as "authorLastName",
         pr.status,
         pr.is_public as "isPublic",
         pr.created_at as "createdAt",
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
     }
 
     const user = verifyToken(token);
-    if (!user || !user.isExpert) {
+    if (!user || !isExpert(user)) {
       return NextResponse.json(
         { error: 'Only experts can create pull requests' },
         { status: 403 }

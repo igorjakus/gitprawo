@@ -17,7 +17,8 @@ export async function GET(
         c.id,
         c.pull_request_id as "pullRequestId",
         c.author_id as "authorId",
-        u.login as "authorLogin",
+        u.first_name as "authorFirstName",
+        u.last_name as "authorLastName",
         c.content,
         c.created_at as "createdAt",
         c.updated_at as "updatedAt"
@@ -99,7 +100,14 @@ export async function POST(
       [prId, user.id, content]
     );
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    // Add author name to the response
+    const comment = {
+      ...result.rows[0],
+      authorFirstName: user.login.split('@')[0].split('.')[0] || 'Unknown',
+      authorLastName: user.login.split('@')[0].split('.')[1] || 'User',
+    };
+
+    return NextResponse.json(comment, { status: 201 });
   } catch (error) {
     console.error('Error adding comment:', error);
     return NextResponse.json(

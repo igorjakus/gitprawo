@@ -26,7 +26,7 @@ export default function NewPullRequestPage() {
     if (userFromStorage) {
       const user = JSON.parse(userFromStorage);
 
-      if (!user.isExpert && !user.isAdmin) {
+      if (user.role !== 'expert' && user.role !== 'admin') {
         router.push('/pull-requests');
         return;
       }
