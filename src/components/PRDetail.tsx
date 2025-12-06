@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { PullRequest, PRChange, PRComment } from '@/types';
 import EditPRModal from './EditPR';
 import AddPRChangeForm from './AddPRChangeForm';
+import DiffViewer from './DiffViewer';
+import { getDiff } from '@/lib/get_diff';
 
 interface PRDetailProps {
   prId: number;
@@ -224,41 +226,22 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
       {changes.length > 0 && (
         <div className="bg-white p-6 rounded-lg border border-gray-200">
           <h2 className="text-2xl font-bold mb-4">Zmiany ({changes.length})</h2>
-          <div className="space-y-4">
+          <div className="space-y-8">
             {changes.map((change) => (
-              <div
-                key={change.id}
-                className="border border-gray-200 rounded p-4"
-              >
+              <div key={change.id}>
                 {change.changeSummary && (
                   <p className="text-sm text-gray-700 mb-2">
                     {change.changeSummary}
                   </p>
                 )}
-
-                {change.oldContentMd && (
-                  <div className="mb-3">
-                    <p className="text-sm font-medium text-gray-600 mb-1">
-                      Stara wersja:
-                    </p>
-                    <pre className="bg-red-50 p-2 rounded text-xs overflow-x-auto text-red-800">
-                      {change.oldContentMd}
-                    </pre>
-                  </div>
-                )}
-
-                <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">
-                    Nowa wersja:
-                  </p>
-                  <pre className="bg-green-50 p-2 rounded text-xs overflow-x-auto text-green-800">
-                    {change.newContentMd}
-                  </pre>
-                </div>
-
-                <p className="text-xs text-gray-500 mt-2">
-                  {new Date(change.createdAt).toLocaleDateString('pl-PL')}
-                </p>
+                
+                <DiffViewer
+                  fromVersion="Obecna wersja"
+                  toVersion="Proponowana zmiana"
+                  fromDate={new Date(pr?.createdAt || Date.now()).toLocaleDateString('pl-PL')}
+                  toDate={new Date(change.createdAt).toLocaleDateString('pl-PL')}
+                  lines={getDiff(change.oldContentMd || '', change.newContentMd)}
+                />
               </div>
             ))}
           </div>

@@ -16,6 +16,7 @@ export default function CreatePRForm({
 }: CreatePRFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +33,18 @@ export default function CreatePRForm({
     }
   }, [token]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      setContent(text);
+    };
+    reader.readAsText(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -40,6 +53,11 @@ export default function CreatePRForm({
     try {
       if (!token) {
         setError('Musisz być zalogowany aby utworzyć pull request');
+        return;
+      }
+
+      if (!content) {
+        setError('Musisz załączyć plik z nową treścią ustawy');
         return;
       }
 
@@ -54,6 +72,7 @@ export default function CreatePRForm({
           title,
           description,
           isPublic,
+          content,
         }),
       });
 
@@ -65,6 +84,7 @@ export default function CreatePRForm({
       const pr = await response.json();
       setTitle('');
       setDescription('');
+      setContent('');
       setIsPublic(true);
 
       if (onSuccess) {
@@ -114,6 +134,22 @@ export default function CreatePRForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Opisz zmiany i ich uzasadnienie"
         />
+      </div>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Plik z nową treścią (Markdown) *
+        </label>
+        <input
+          type="file"
+          accept=".md,.txt"
+          onChange={handleFileChange}
+          required
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          Wybierz plik z lokalnego dysku zawierający nową treść ustawy.
+        </p>
       </div>
 
       <div className="mb-6">

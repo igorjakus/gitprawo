@@ -102,41 +102,74 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { actId, title, description, isPublic } = await request.json();
+    const { actId, title, description, isPublic, content } = await request.json();
 
-    if (!actId || !title) {
+    if (!actId || !title || !content) {
       return NextResponse.json(
-        { error: 'Act ID and title are required' },
+        { error: 'Act ID, title, and content are required' },
         { status: 400 }
       );
     }
 
-    // Verify act exists
-    const actCheck = await db.query('SELECT id FROM acts WHERE id = $1', [actId]);
-    if (actCheck.rows.length === 0) {
+    // Verify act exists and get current content
+    const actResult = await db.query(`
+      SELECT a.id, av.content_md 
+      FROM acts a
+      LEFT JOIN act_versions av ON a.current_version_id = av.id
+      WHERE a.id = $1
+    `, [actId]);
+
+    if (actResult.rows.length === 0) {
       return NextResponse.json(
         { error: 'Act not found' },
         { status: 404 }
       );
     }
 
-    const result = await db.query(
-      `INSERT INTO pull_requests (act_id, title, description, author_id, is_public, status)
-       VALUES ($1, $2, $3, $4, $5, 'open')
-       RETURNING 
-         id,
-         act_id as "actId",
-         title,
-         description,
-         author_id as "authorId",
-         status,
-         is_public as "isPublic",
-         created_at as "createdAt",
-         updated_at as "updatedAt"`,
-      [actId, title, description || null, user.id, isPublic !== false]
-    );
+    const currentContent = actResult.rows[0].content_md || '';
 
-    return NextResponse.json(result.rows[0], { status: 201 });
+    // Start transaction
+    await db.query('BEGIN');
+
+    try {
+      const prResult = await db.query(
+        `INSERT INTO pull_requests (act_id, title, description, author_id, is_public, status)
+         VALUES ($1, $2, $3, $4, $5, 'open')
+         RETURNING id`,
+        [actId, title, description || null, user.id, isPublic !== false]
+      );
+
+      const prId = prResult.rows[0].id;
+
+      await db.query(
+        `INSERT INTO pr_changes (pull_request_id, old_content_md, new_content_md)
+         VALUES ($1, $2, $3)`,
+        [prId, currentContent, content]
+      );
+
+      await db.query('COMMIT');
+
+      // Fetch the created PR with details
+      const result = await db.query(`
+        SELECT 
+           id,
+           act_id as "actId",
+           title,
+           description,
+           author_id as "authorId",
+           status,
+           is_public as "isPublic",
+           created_at as "createdAt",
+           updated_at as "updatedAt"
+        FROM pull_requests
+        WHERE id = $1
+      `, [prId]);
+
+      return NextResponse.json(result.rows[0], { status: 201 });
+    } catch (error) {
+      await db.query('ROLLBACK');
+      throw error;
+    }
   } catch (error) {
     console.error('Error creating pull request:', error);
     return NextResponse.json(

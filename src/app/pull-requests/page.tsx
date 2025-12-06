@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default async function PullRequestsPage() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const token = cookieStore.get('auth-token')?.value;
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">

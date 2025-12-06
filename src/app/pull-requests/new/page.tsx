@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Act } from '@/types';
 import CreatePRForm from '@/components/CreatePRForm';
 
@@ -67,6 +68,13 @@ export default function NewPullRequestPage() {
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        <Link
+          href="/pull-requests"
+          className="text-blue-600 hover:underline mb-6 inline-block"
+        >
+          ← Wróć do listy PR-ów
+        </Link>
+
         <h1 className="text-4xl font-bold text-gray-900 mb-8">
           Nowy pull request
         </h1>
