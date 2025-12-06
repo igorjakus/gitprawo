@@ -14,7 +14,7 @@ function slugify(input: string): string {
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string; versionId: string } }
+  { params }: { params: Promise<{ id: string; versionId: string }> }
 ) {
   const { id, versionId } = await params;
   const url = new URL(request.url);
