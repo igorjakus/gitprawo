@@ -183,7 +183,7 @@ export default async function Home() {
     .slice(0, 5);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-[#1e3a8a] to-[#3b82f6] text-white rounded-lg shadow-lg p-8 mb-8">
         <h1 className="text-4xl font-bold mb-2">GitPrawo</h1>

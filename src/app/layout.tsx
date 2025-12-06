@@ -13,8 +13,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pl">
-      <body className="bg-gray-50 text-gray-900 antialiased">
+    <html lang="pl" style={{ background: '#fff' }}>
+      <body className="bg-white text-gray-900 antialiased" style={{ background: '#fff' }}>
         <header className="bg-[#1e3a8a] text-white shadow-md">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -46,17 +46,14 @@ export default function RootLayout({
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
               <p>© 2025 GitPrawo - Otwarty system monitorowania legislacji</p>
-              <div className="flex space-x-4 mt-2 md:mt-0">
-                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
-                  Kontakt
-                </a>
-                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
-                  API
-                </a>
-                <a href="#" className="hover:text-[#1e3a8a] transition-colors">
-                  GitHub
-                </a>
-              </div>
+                <div className="flex space-x-4 mt-2 md:mt-0">
+                  <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                    Kontakt
+                  </a>
+                  <a href="#" className="hover:text-[#1e3a8a] transition-colors">
+                    GitHub
+                  </a>
+                </div>
             </div>
           </div>
         </footer>
