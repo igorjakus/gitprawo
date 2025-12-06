@@ -4,11 +4,11 @@ import bcrypt from 'bcrypt';
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, firstName, lastName } = await request.json();
 
-    if (!email || !password) {
+    if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Email, password, first name and last name are required' },
         { status: 400 }
       );
     }
@@ -31,8 +31,8 @@ export async function POST(request: Request) {
 
     // Insert new user
     await db.query(
-      'INSERT INTO users (login, hash_pass, is_default) VALUES ($1, $2, $3)',
-      [email, hashedPassword, true]
+      'INSERT INTO users (login, first_name, last_name, hash_pass, role) VALUES ($1, $2, $3, $4, $5)',
+      [email, firstName, lastName, hashedPassword, 'default']
     );
 
     return NextResponse.json(

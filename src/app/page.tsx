@@ -131,12 +131,6 @@ export default async function Home() {
                 </div>
               ))}
             </div>
-            <Link
-              href="/updates"
-              className="block mt-4 text-center text-sm text-[#3b82f6] hover:text-[#1e3a8a] font-medium"
-            >
-              Zobacz wszystkie zmiany →
-            </Link>
           </div>
         </div>
       </div>

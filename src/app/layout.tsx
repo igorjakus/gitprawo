@@ -36,6 +36,12 @@ export default function RootLayout({
                   Akty prawne
                 </Link>
                 <Link 
+                  href="/pull-requests" 
+                  className="hover:text-blue-200 transition-colors"
+                >
+                  Pull requesty
+                </Link>
+                <Link 
                   href="/about" 
                   className="hover:text-blue-200 transition-colors"
                 >

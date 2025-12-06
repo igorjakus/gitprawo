@@ -26,6 +26,21 @@ async function printTables() {
     console.log('Act Versions Table:');
     console.table(actVersions.rows);
 
+    // Fetch data from pull_requests table
+    const pullRequests = await client.query('SELECT * FROM pull_requests');
+    console.log('Pull Requests Table:');
+    console.table(pullRequests.rows);
+
+    // Fetch data from pr_changes table
+    const prChanges = await client.query('SELECT * FROM pr_changes');
+    console.log('PR Changes Table:');
+    console.table(prChanges.rows);
+
+    // Fetch data from pr_comments table
+    const prComments = await client.query('SELECT * FROM pr_comments');
+    console.log('PR Comments Table:');
+    console.table(prComments.rows);
+
   } catch (err) {
     console.error('Error fetching data:', err);
   } finally {

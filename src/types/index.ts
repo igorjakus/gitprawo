@@ -41,3 +41,56 @@ export interface DiffSection {
   title: string;
   lines: DiffLine[];
 }
+
+export type PRStatus = 'open' | 'merged' | 'closed' | 'draft';
+
+export interface PullRequest {
+  id: number;
+  actId: number;
+  actTitle?: string;
+  title: string;
+  description?: string;
+  authorId: number;
+  authorFirstName?: string;
+  authorLastName?: string;
+  status: PRStatus;
+  isPublic: boolean;
+  createdAt: string;
+  updatedAt: string;
+  mergedAt?: string;
+  mergedById?: number;
+}
+
+export interface PRChange {
+  id: number;
+  pullRequestId: number;
+  oldContentMd?: string;
+  newContentMd: string;
+  changeSummary?: string;
+  createdAt: string;
+}
+
+export interface PRComment {
+  id: number;
+  pullRequestId: number;
+  authorId: number;
+  authorFirstName?: string;
+  authorLastName?: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PRAIFeedback {
+  id: number;
+  pullRequestId: number;
+  message: string;
+  approved: boolean;
+  createdAt: string;
+}
+
+export interface AIFeedback {
+  message: string;
+  approved: boolean;
+}
+

@@ -3,8 +3,15 @@ import jwt from 'jsonwebtoken';
 export interface UserSession {
   id: number;
   login: string;
-  isAdmin: boolean;
-  isExpert: boolean;
+  role: 'default' | 'expert' | 'admin';
+}
+
+export function isAdmin(user: UserSession): boolean {
+  return user.role === 'admin';
+}
+
+export function isExpert(user: UserSession): boolean {
+  return user.role === 'expert' || user.role === 'admin';
 }
 
 export function createToken(user: UserSession): string {
