@@ -165,6 +165,37 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     }
   };
 
+  const handleRegenerateAI = async () => {
+    setAiError(null);
+    setAiLoading(true);
+
+    try {
+      if (!token) {
+        throw new Error('Musisz być zalogowany aby wygenerować feedback AI');
+      }
+
+      const res = await fetch(`/api/pull-requests/${prId}/ai-feedback`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Nie udało się wygenerować feedbacku AI');
+      }
+
+      const aiData = await res.json();
+      setAiFeedback(aiData);
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   if (loading) {
     return <div className="text-gray-500">Ładowanie...</div>;
   }
@@ -338,17 +369,30 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
             </div>
           </div>
 
-          {aiFeedback && (
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                aiFeedback.approved
-                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                  : 'bg-red-50 text-red-900 border border-red-300 shadow-[0_0_0_1px_rgba(248,113,113,0.35)]'
-              }`}
-            >
-              {aiFeedback.approved ? 'Zatwierdzone' : 'Wymaga poprawek'}
-            </span>
-          )}
+          <div className="flex items-center gap-2">
+            {aiFeedback && (
+              <>
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    aiFeedback.approved
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : 'bg-red-50 text-red-900 border border-red-300 shadow-[0_0_0_1px_rgba(248,113,113,0.35)]'
+                  }`}
+                >
+                  {aiFeedback.approved ? 'Zatwierdzone' : 'Wymaga poprawek'}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleRegenerateAI}
+                  disabled={aiLoading || !token}
+                  className="px-3 py-1 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                  title="Regeneruj opinię AI"
+                >
+                  Odśwież
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {aiError && (
@@ -358,29 +402,45 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         )}
 
         {aiFeedback ? (
-          <div className="bg-white border border-indigo-100 rounded-lg p-4 shadow-sm">
-            <div className="prose prose-sm text-gray-800 max-w-none">
-              <ReactMarkdown>{aiFeedback.message}</ReactMarkdown>
+          <>
+            {aiLoading && (
+              <div className="mb-3 flex items-center gap-2 text-indigo-700">
+                <div className="animate-spin h-4 w-4 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+                <span className="text-sm">Generuję nową opinię...</span>
+              </div>
+            )}
+            <div className="bg-white border border-indigo-100 rounded-lg p-4 shadow-sm">
+              <div className="prose prose-sm text-gray-800 max-w-none">
+                <ReactMarkdown>{aiFeedback.message}</ReactMarkdown>
+              </div>
+              <div className="mt-3 text-xs text-gray-500">
+                Wygenerowano: {new Date(aiFeedback.createdAt).toLocaleString('pl-PL')}
+              </div>
             </div>
-            <p className="mt-3 text-xs text-gray-500">
-              Wygenerowano: {new Date(aiFeedback.createdAt).toLocaleString('pl-PL')}
-            </p>
-          </div>
+          </>
         ) : (
-          <div className="flex items-center justify-between gap-4 bg-white border border-dashed border-indigo-200 rounded-lg p-4">
-            <div>
-              <p className="text-gray-800 font-medium">Brak jeszcze opinii AI</p>
-              <p className="text-sm text-gray-600">Wygeneruj automatyczny feedback w stylu code review dla tekstu prawnego.</p>
+          <>
+            {aiLoading && (
+              <div className="mb-3 flex items-center gap-2 text-indigo-700">
+                <div className="animate-spin h-4 w-4 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+                <span className="text-sm">Generuję opinię...</span>
+              </div>
+            )}
+            <div className="flex items-center justify-between gap-4 bg-white border border-dashed border-indigo-200 rounded-lg p-4">
+              <div>
+                <p className="text-gray-800 font-medium">Brak jeszcze opinii AI</p>
+                <p className="text-sm text-gray-600">Wygeneruj automatyczny feedback w stylu code review dla tekstu prawnego.</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleGenerateAI}
+                disabled={aiLoading || !token}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {aiLoading ? 'Generuję...' : 'Wygeneruj feedback'}
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleGenerateAI}
-              disabled={aiLoading || !token}
-              className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              {aiLoading ? 'Generuję...' : 'Wygeneruj feedback'}
-            </button>
-          </div>
+          </>
         )}
       </div>
 
