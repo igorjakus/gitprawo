@@ -81,3 +81,8 @@ export interface PRComment {
   updatedAt: string;
 }
 
+export interface AIFeedback {
+  message: string;
+  approved: boolean;
+}
+
