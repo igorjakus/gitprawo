@@ -61,6 +61,7 @@ export default function AuthStatus() {
       
       // Clear localStorage
       localStorage.removeItem('user');
+      localStorage.removeItem('token');
       
       // Redirect to home
       window.location.href = '/';
