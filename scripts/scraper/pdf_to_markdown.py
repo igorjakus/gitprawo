@@ -81,11 +81,29 @@ def parse_polish_law_pdf(pdf_path, output_md_path):
 
 
 # --- PRZYKŁAD UŻYCIA ---
-# 1. Pobierz PDF Kodeksu Cywilnego z ISAP:
-# https://isap.sejm.gov.pl/isap.nsf/download.xsp/WDU19640160093/U/D19640093Lj.pdf
-# 2. Zapisz go jako "kodeks.pdf" w folderze ze skryptem.
+# 1. Pobierz PDF Kodeksu Cywilnego z ISAP za pomocą: ../download/download_pdf.sh
+# 2. PDF zostanie zapisany w ../output/kodeks.pdf
 # 3. Uruchom skrypt.
 
 if __name__ == "__main__":
-    # Możesz podmienić nazwę pliku na dowolny inny akt prawny z ISAP
-    parse_polish_law_pdf("kodeks.pdf", "kodeks_cywilny.md")
+    import sys
+    import os
+
+    # Ścieżka do output directory (tymczasowo dla PDF)
+    scripts_dir = os.path.dirname(__file__)
+    output_dir = os.path.join(scripts_dir, "..", "output")
+    input_pdf = os.path.join(output_dir, "kodeks.pdf")
+
+    # Ścieżka do public/laws/ dla Markdown
+    public_laws_dir = os.path.join(scripts_dir, "..", "..", "public", "laws")
+    output_md = os.path.join(public_laws_dir, "kodeks_cywilny.md")
+
+    if not os.path.exists(input_pdf):
+        print(f"❌ Błąd: Plik {input_pdf} nie istnieje!")
+        print("Pobierz PDF za pomocą: ./scripts/download/download_pdf.sh")
+        sys.exit(1)
+
+    # Upewnij się, że katalog istnieje
+    os.makedirs(public_laws_dir, exist_ok=True)
+
+    parse_polish_law_pdf(input_pdf, output_md)
