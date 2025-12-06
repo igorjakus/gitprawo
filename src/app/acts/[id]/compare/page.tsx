@@ -3,6 +3,7 @@ import Link from 'next/link';
 import DiffViewer from '@/components/DiffViewer';
 import { getDiff } from '@/lib/get_diff';
 import { getActById, getVersionContent } from '@/lib/acts';
+import AICompareFeedback from '@/components/AICompareFeedback';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
@@ -15,6 +16,7 @@ export default async function ComparePage({
 }) {
   const { id: actId } = await params;
   const resolvedSearchParams = await searchParams;
+  
   const fromId = Array.isArray(resolvedSearchParams.from)
     ? resolvedSearchParams.from[0]
     : resolvedSearchParams.from;
@@ -27,16 +29,15 @@ export default async function ComparePage({
   }
 
   const act = await getActById(actId);
-
   if (!act) {
-    notFound();
+    return null; // Lub notFound()
   }
 
   const fromVersion = act.versions.find((v) => v.id === fromId);
   const toVersion = act.versions.find((v) => v.id === toId);
 
   if (!fromVersion || !toVersion) {
-    notFound();
+    return null;
   }
 
   const [fromContent, toContent] = await Promise.all([
@@ -45,10 +46,19 @@ export default async function ComparePage({
   ]);
 
   if (!fromContent || !toContent) {
-    notFound();
+    return (
+        <div className="container mx-auto px-4 py-8 text-center text-red-600">
+            Nie udało się pobrać treści wersji do porównania.
+        </div>
+    );
   }
 
   const diffLines = getDiff(fromContent, toContent);
+
+  // Obliczenia statystyk do wyświetlenia
+  const addedCount = diffLines.filter((l) => l.type === 'added').length;
+  const removedCount = diffLines.filter((l) => l.type === 'removed').length;
+  const totalChanges = diffLines.filter((l) => l.type !== 'unchanged').length;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -87,6 +97,27 @@ export default async function ComparePage({
         lines={diffLines}
       />
 
+      {/* Summary Stats */}
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="text-2xl font-bold text-green-600">+{addedCount}</div>
+          <div className="text-sm text-gray-600">Dodanych linii</div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="text-2xl font-bold text-red-600">-{removedCount}</div>
+          <div className="text-sm text-gray-600">Usuniętych linii</div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="text-2xl font-bold text-[#1e3a8a]">{totalChanges}</div>
+          <div className="text-sm text-gray-600">Łączna liczba zmian</div>
+        </div>
+      </div>
+
+      {/* AI Summary (client-side, on demand) */}
+      <div id="ai-summary" className="mt-8">
+        <AICompareFeedback fromContent={fromContent} toContent={toContent} />
+      </div>
+
       {/* Actions */}
       <div className="mt-6 flex justify-between items-center">
         <Link
@@ -111,28 +142,6 @@ export default async function ComparePage({
           >
             Pobierz
           </a>
-        </div>
-      </div>
-
-      {/* Summary Stats */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-2xl font-bold text-green-600">
-            +{diffLines.filter((l) => l.type === 'added').length}
-          </div>
-          <div className="text-sm text-gray-600">Dodanych linii</div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-2xl font-bold text-red-600">
-            -{diffLines.filter((l) => l.type === 'removed').length}
-          </div>
-          <div className="text-sm text-gray-600">Usuniętych linii</div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-          <div className="text-2xl font-bold text-[#1e3a8a]">
-            {diffLines.filter((l) => l.type !== 'unchanged').length}
-          </div>
-          <div className="text-sm text-gray-600">Łączna liczba zmian</div>
         </div>
       </div>
     </div>

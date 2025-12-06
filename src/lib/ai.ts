@@ -5,8 +5,9 @@ export interface AIFeedback {
   approved: boolean;
 }
 
-// Allow model override via env; default to lightweight fast model
-const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+export interface AISupportSummary {
+  message: string;
+}
 
 const FEEDBACK_PROMPT = `Jesteś ekspertem w legislacji i językoznawstwie. Przeanalizuj poniższy tekst aktu prawnego pod względem:
 
@@ -29,7 +30,20 @@ Tekst do analizy:
 
 Odpowiedź:`;
 
-// Lazily create a single Gemini client to avoid re-instantiating per request
+const SUMMARY_PROMPT = `Porównaj poniższe dwie wersje aktu prawnego i wygeneruj podsumowanie najważniejszych zmian oraz wyjaśnij ich wpływ na obywateli. Podsumowanie ma być łatwe w odbiorze i napisane prostym, zrozumiałym językiem.
+
+Wersja wcześniejsza:
+---
+{FROM}
+---
+Wersja późniejsza:
+---
+{TO}
+---
+
+Odpowiedź:`;
+
+const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 let genAIClient: GoogleGenerativeAI | null = null;
 
 const getGenAIClient = () => {
@@ -46,23 +60,32 @@ export async function getAIFeedback(text: string): Promise<AIFeedback> {
   try {
     const model = getGenAIClient().getGenerativeModel({ model: MODEL_NAME });
     const prompt = FEEDBACK_PROMPT.replace('{TEXT}', text);
-
     const result = await model.generateContent(prompt);
     const responseText = result.response.text().trim();
-
-    // Parse response - first word should be APPROVED or REJECTED
     const firstWord = responseText.split('\n')[0].toUpperCase();
     const approved = firstWord.includes('APPROVED');
-
-    // Get the rest of the message (skip the first line)
     const message = responseText.split('\n').slice(1).join('\n').trim();
-
     return {
       message: message || responseText,
       approved,
     };
   } catch (error) {
     console.error('Error getting AI feedback:', error);
+    throw error;
+  }
+}
+
+export async function getAISupportSummary(from: string, to: string): Promise<AISupportSummary> {
+  try {
+    const model = getGenAIClient().getGenerativeModel({ model: MODEL_NAME });
+    const prompt = SUMMARY_PROMPT.replace('{FROM}', from).replace('{TO}', to);
+    const result = await model.generateContent(prompt);
+    const responseText = result.response.text().trim();
+    return {
+      message: responseText,
+    };
+  } catch (error) {
+    console.error('Error getting AI summary:', error);
     throw error;
   }
 }

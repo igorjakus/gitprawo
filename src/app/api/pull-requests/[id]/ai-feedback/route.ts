@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/database';
 import { verifyToken } from '@/lib/auth';
-import { getAIFeedback } from '@/lib/ai-feedback';
+import { getAIFeedback } from '@/lib/ai';
 import { hasPermission } from '@/lib/ai-config';
 import { PRAIFeedback } from '@/types';
 
