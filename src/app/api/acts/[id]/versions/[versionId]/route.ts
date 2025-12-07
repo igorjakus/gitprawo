@@ -40,7 +40,7 @@ export async function GET(
   const filename = `${namePart}-${versionPart}.md`;
 
   const headers: Record<string, string> = {
-    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Type': view ? 'text/plain; charset=utf-8' : 'text/markdown; charset=utf-8',
     'Cache-Control': 'no-store',
   };
 

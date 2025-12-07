@@ -75,7 +75,7 @@ export default async function ActPage({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Zobacz pełny tekst
+                  Pokaż
                 </a>
                 <a
                   href={`/api/acts/${act.id}/versions/${act.versions[0].id}`}
@@ -91,7 +91,7 @@ export default async function ActPage({
                   className="px-4 py-2 text-sm font-medium text-gray-400 bg-blue-50 rounded cursor-not-allowed"
                   disabled
                 >
-                  Zobacz pełny tekst
+                  Pokaż
                 </button>
                 <button
                   className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-100 rounded cursor-not-allowed"

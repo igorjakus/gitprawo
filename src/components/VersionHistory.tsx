@@ -53,12 +53,14 @@ export default function VersionHistory({ actId, versions }: VersionHistoryProps)
               </div>
               
               <div className="flex space-x-2 ml-4">
-                <Link
-                  href={`/acts/${actId}/versions/${version.id}`}
+                <a
+                  href={`/api/acts/${actId}/versions/${version.id}?view=true`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-3 py-1 text-xs font-medium text-[#1e3a8a] bg-blue-50 rounded hover:bg-blue-100 transition-colors"
                 >
                   Zobacz
-                </Link>
+                </a>
                 {index > 0 && (
                   <Link
                     href={`/acts/${actId}/compare?from=${versions[index].id}&to=${versions[index - 1].id}`}
