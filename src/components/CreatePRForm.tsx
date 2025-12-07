@@ -77,8 +77,14 @@ export default function CreatePRForm({
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Nie udało się utworzyć propozycji zmian');
+        const text = await response.text();
+        try {
+          const data = JSON.parse(text);
+          throw new Error(data.error || 'Nie udało się utworzyć propozycji zmian');
+        } catch (e) {
+          console.error('Server response:', text);
+          throw new Error(text || `Błąd serwera: ${response.status}`);
+        }
       }
 
       const pr = await response.json();
