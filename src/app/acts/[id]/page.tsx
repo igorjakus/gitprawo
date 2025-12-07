@@ -69,14 +69,12 @@ export default async function ActPage({
           <div className="flex space-x-2">
             {act.versions[0] ? (
               <>
-                <a
-                  href={`/api/acts/${act.id}/versions/${act.versions[0].id}?view=true`}
+                <Link
+                  href={`/acts/${act.id}/versions/${act.versions[0].id}/view`}
                   className="px-4 py-2 text-sm font-medium text-white bg-[#1e3a8a] rounded hover:bg-[#3b82f6] transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Pokaż
-                </a>
+                </Link>
                 <a
                   href={`/api/acts/${act.id}/versions/${act.versions[0].id}`}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 transition-colors"
