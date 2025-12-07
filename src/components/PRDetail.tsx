@@ -98,7 +98,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     if (!token) return;
 
     try {
-      const res = await fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, {
+      const res = await fetch(`/api/propozycje-zmian/${prId}/vote`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
