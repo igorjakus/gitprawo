@@ -11,13 +11,14 @@ export default function AboutPage() {
 
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Czym jest GitPrawo?</h2>
         <p className="text-gray-700 mb-6">
-          Inspirowani "Legislative Train Schedule" Parlamentu Europejskiego, stworzyliśmy system który:
+          Inspirowani <a className="text-[#1e3a8a] hover:underline" href="https://www.europarl.europa.eu/legislative-train/schedule" target="_blank" rel="noopener noreferrer">Legislative Train Schedule</a> Parlamentu Europejskiego, stworzyliśmy system który:
         </p>
         <ul className="list-disc pl-6 text-gray-700 mb-8 space-y-2">
-          <li>Pokazuje pełną <strong>historię wersji aktów prawnych</strong> w stylu Git</li>
-          <li>Umożliwia <strong>porównywanie zmian</strong> (diff) między wersjami</li>
-          <li>Wprowadza <strong>Pull Requesty dla prawa</strong> – propozycje zmian z komentarzami</li>
-          <li>Wspiera <strong>AI-powered feedback</strong> sprawdzający prostotę języka (B2), ortografię i klarowność</li>
+          <li>Pokazuje pełną <strong>historię wersji aktów prawnych</strong> z czytelnym śledzeniem zmian</li>
+          <li>Umożliwia <strong>porównywanie zmian</strong> między wersjami</li>
+          <li>Wprowadza <strong>propozycje zmian</strong> – wnioski legislacyjne z komentarzami</li>
+          <li>Wspiera <strong>ocenę językową AI</strong> sprawdzającą prostotę języka (B2), ortografię i klarowność</li>
+          <li>Dodaje <strong>AI-owe podsumowania różnic</strong> między wersjami, by szybko zrozumieć zmiany prostym językiem</li>
           <li>Wizualizuje <strong>proces legislacyjny</strong> w czytelnej formie</li>
         </ul>
 
@@ -27,21 +28,37 @@ export default function AboutPage() {
           <div className="border-l-4 border-[#3b82f6] pl-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">🔄 Wersjonowanie aktów prawnych</h3>
             <p className="text-gray-700">
-              Każda zmiana w prawie jest rejestrowana jako commit. Możesz przeglądać historię, 
+              Każda zmiana w prawie jest rejestrowana w systemie. Możesz przeglądać historię, 
               porównywać wersje i śledzić ewolucję przepisów w czasie.
             </p>
           </div>
 
           <div className="border-l-4 border-[#3b82f6] pl-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">📝 Pull Requesty prawne</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🚂 Legislative Train</h3>
             <p className="text-gray-700">
-              Eksperci mogą tworzyć propozycje zmian (PR), dyskutować nad nimi, 
-              dodawać komentarze i śledzić status akceptacji – jak w GitHub.
+              Interaktywna oś legislacyjna pokazuje etapy procesu (prekonsultacje → rząd → Sejm/Senat → prezydent)
+              dla każdego aktu, z podglądem statusów i dat.
             </p>
           </div>
 
           <div className="border-l-4 border-[#3b82f6] pl-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">🤖 Wsparcie AI (Gemini)</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📝 Propozycje zmian</h3>
+            <p className="text-gray-700">
+              Eksperci mogą tworzyć propozycje zmian, dyskutować nad nimi, 
+              dodawać komentarze i śledzić status akceptacji.
+            </p>
+          </div>
+
+          <div className="border-l-4 border-[#3b82f6] pl-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">💬 Komentarze i głosowanie</h3>
+            <p className="text-gray-700">
+              Komentowanie propozycji jest już dostępne, a użytkownicy mogą głosować w prosty sposób (👍 / 👎),
+              co ułatwia szybki feedback społeczności.
+            </p>
+          </div>
+
+          <div className="border-l-4 border-[#3b82f6] pl-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🤖 Ocena jakości propozycji (AI)</h3>
             <p className="text-gray-700">
               Automatyczna ocena tekstów prawnych pod kątem prostoty języka (poziom B2), 
               spójności, błędów ortograficznych i klarowności – jak code review, ale dla prawa.
@@ -49,10 +66,18 @@ export default function AboutPage() {
           </div>
 
           <div className="border-l-4 border-[#3b82f6] pl-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📊 Podsumowania zmian (AI)</h3>
+            <p className="text-gray-700">
+              Generujemy krótkie podsumowania różnic między wersjami, aby łatwiej zrozumieć
+              wpływ zmian prostym językiem.
+            </p>
+          </div>
+
+          <div className="border-l-4 border-[#3b82f6] pl-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">👥 System uprawnień</h3>
             <p className="text-gray-700">
-              Trzy role: Admin, Ekspert, Użytkownik. Każdy może przeglądać i komentować. 
-              Eksperci tworzą Pull Requesty. Admini zarządzają systemem.
+              Trzy role: Administrator, Ekspert, Użytkownik. Każdy może przeglądać i komentować. 
+              Eksperci tworzą propozycje zmian. Administratorzy zarządzają systemem.
             </p>
           </div>
         </div>
@@ -71,11 +96,8 @@ export default function AboutPage() {
 
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Dalsze plany</h2>
         <ul className="list-disc pl-6 text-gray-700 mb-8 space-y-2">
-          <li>Wizualizacja "Legislative Train" – ścieżka legislacyjna dla każdego aktu</li>
           <li>Tłumacz AI: przekład urzędniczego języka na prosty język obywatelski</li>
           <li>Newsletter z miesięcznymi zmianami w prawie</li>
-          <li>Chatbot asystent prawny (edukacyjny, zachowawczy)</li>
-          <li>Publiczne konsultacje przez Issues/Komentarze</li>
           <li>Otwarte API dla deweloperów</li>
         </ul>
 

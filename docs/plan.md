@@ -6,7 +6,7 @@ Portal na zasadzie GitHuba pokazujący wszelkie zmiany prawne (z podziałami na 
 _ do eskportu do PDF
 _ kodeks prawny w formie protalu
 _ stworzenie bota AI do sprawdzania poprawności jezykowej - język na poziomie B2
-_ repozytoria (we współpracy z prawnikami i odpowiednimi władzami) - chat analizujący prawne potrzeby obywateli i ich sytuacje (prawne).
+_ repozytoria (we współpracy z prawnikami i odpowiednimi władzami)
 
 ### Przydatne linki
 
@@ -58,11 +58,7 @@ Dla każdej zmiany:
 6. (opcjonalnie) tagowanie pullrequestów istotnością
 
 **(OPCJONALNIE) Chatbot asystent**
-
-1. Odpowiada na pytania obywateli
-2. Pomaga zrozumieć akty prawne
-3. Odpowiada zachowawczo, nie chcąc wprowadzić w błąd obywateli. Przypomina, że jest chatbotem i sugeruje kontakt z odpowiednim specjalistą.
-4. Nie zapamiętuje konwersacji
+Nie realizujemy (decyzja produktowa), więc pomijamy.
 
 **Deployment**
 Vercel, lub coś jeszcze prostszego. Z darmowym free-tierem.
@@ -124,27 +120,17 @@ Aby system był zrozumiały dla administracji, używamy metaforyki legislacyjnej
 
 ---
 
-### Wymagania Techniczne i Stack
+### Rozwiązania Techniczne
 
-**Frontend & UX**
+**Frontend & UX**: Next.js, React
 
-- **Technologia:** Next.js (React).
-- Rendering dokumentów do przyjaznego HTML/PDF z nawigacją po rozdziałach.
+**Baza danych**: PostgreSQL Neon
 
-**Backend & Data**
+**AI & NLP**: LLM (przez API) do wsparcia ekspertów, oraz obywateli
 
-- **Silnik:** Git (pod spodem) do wersjonowania tekstu.
-- **Baza danych:** PostgreSQL Neon
+**Deployment**: Vercel
 
-**AI & NLP**
-
-- **Model:** LLM (np. Gemini z API) do sumaryzacji zmian i "tłumaczenia" na prosty język.
-- **Ochrona danych:** Animizacja danych przed wysłaniem do modelu, zgodnie z RODO i DSA. Docelowo postawiony lokalnie na serwerze rządowym model np. Bielik.
-
-**Deployment**
-
-- Rozwiązanie chmurowe (np. Vercel/AWS)
-- Open Source
+**Autoryzacja i autentykacja:** Działająca autoryzacja i autentykacja, z podziałem użytkowników na zwykłych, expertów (prawników, urzędników itp.), oraz adminsitratorów.
 
 ### Scenariusz Użycia (User Journey)
 
@@ -172,7 +158,5 @@ _Aplikacja jest prototypem (PoC). Prezentowane treści prawne mają charakter po
 ---
 
 ### Backlog
-
-Jeżeli wprowadzono istotność pull-requestów, to wtedy powiadomienia przy najwiekszej istotności.
 
 Newsletter z miesięcznymi zmianami.
