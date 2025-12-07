@@ -1,0 +1,16 @@
+Regulamin Serwisu GitPrawo
+
+1. Postanowienia ogólne
+Niniejszy regulamin określa zasady korzystania z serwisu GitPrawo, dostępnego pod adresem internetowym gitprawo.pl.
+
+2. Definicje
+Użytkownik - każda osoba fizyczna, prawna lub jednostka organizacyjna nieposiadająca osobowości prawnej, która korzysta z Serwisu.
+
+3. Zasady korzystania
+Użytkownik zobowiązany jest do korzystania z Serwisu w sposób zgodny z prawem i dobrymi obyczajami.
+
+4. Odpowiedzialność
+Administrator nie ponosi odpowiedzialności za przerwy w działaniu Serwisu wynikające z przyczyn technicznych.
+
+5. Postanowienia końcowe
+W sprawach nieuregulowanych niniejszym Regulaminem zastosowanie mają przepisy Kodeksu Cywilnego.

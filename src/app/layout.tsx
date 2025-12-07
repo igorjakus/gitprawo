@@ -61,6 +61,9 @@ export default function RootLayout({
                   <Link href="/about" className="hover:text-[#1e3a8a] transition-colors flex items-center">
                     O projekcie
                   </Link>
+                  <a href="/regulamin.txt" target="_blank" className="hover:text-[#1e3a8a] transition-colors flex items-center">
+                    Regulamin
+                  </a>
                   <a href="https://github.com/igorjakus/gitprawo" target="_blank" rel="noopener noreferrer" className="hover:text-[#1e3a8a] transition-colors flex items-center">
                     GitHub
                   </a>
