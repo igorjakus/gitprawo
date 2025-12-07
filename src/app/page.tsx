@@ -1,7 +1,13 @@
 import Link from 'next/link';
 import { getAllActs } from '../lib/acts';
+import { cookies } from 'next/headers';
+import { verifyToken, isExpert } from '../lib/auth';
 
 export default async function Home() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('auth-token')?.value;
+  const user = token ? verifyToken(token) : null;
+  const canCreateAct = user ? isExpert(user) : false;
   const acts = await getAllActs();
   
   // Stats
@@ -35,7 +41,17 @@ export default async function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Acts List */}
         <div className="lg:col-span-2">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Akty prawne</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-gray-900">Akty prawne</h2>
+            {canCreateAct && (
+              <Link
+                href="/acts/new"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                + Dodaj akt prawny
+              </Link>
+            )}
+          </div>
           <div className="space-y-4">
             {acts.map((act) => (
               <Link
