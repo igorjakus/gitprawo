@@ -88,7 +88,7 @@ export default function AuthStatus() {
   return (
     <div className="flex items-center space-x-4">
       <span className="text-sm text-gray-100">
-        Zalogowany jako: <strong>{user.login}</strong>
+        <strong>{user.login}</strong>
       </span>
       <button
         onClick={handleLogout}
