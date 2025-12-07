@@ -18,7 +18,7 @@ export const AI_FEEDBACK_CONFIG = {
 
   // AI Model to use for feedback generation
   model: {
-    default: 'gemini-2.5-flash-lite',
+    default: 'gemma-3-27b',
     envKey: 'GEMINI_MODEL',
     description: 'Lightweight, fast Gemini model optimized for feedback',
   },

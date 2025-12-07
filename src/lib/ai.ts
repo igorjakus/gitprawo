@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { AI_FEEDBACK_CONFIG } from './ai-config';
 
 export interface AIFeedback {
   message: string;
@@ -43,7 +44,7 @@ Wersja późniejsza:
 
 Odpowiedź:`;
 
-const MODEL_NAME = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
+const MODEL_NAME = AI_FEEDBACK_CONFIG.model.default;
 let genAIClient: GoogleGenerativeAI | null = null;
 
 const getGenAIClient = () => {
