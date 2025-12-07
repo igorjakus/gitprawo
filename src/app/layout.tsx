@@ -39,7 +39,7 @@ export default function RootLayout({
                   href="/propozycje-zmian" 
                   className="hover:text-blue-200 transition-colors"
                 >
-                  Propozycje zmian
+                  Propozycje zmian i konsultacje społeczne
                 </Link>
                 <Link 
                   href="/about" 
