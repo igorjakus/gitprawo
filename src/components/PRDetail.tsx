@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import AIReviewFeedback from './AIReviewFeedback';
 import { PullRequest, PRChange, PRComment, PRAIFeedback } from '@/types';
 import EditPRModal from './EditPR';
 import AddPRChangeForm from './AddPRChangeForm';
@@ -425,98 +425,15 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
       )}
 
       {/* AI Feedback */}
-      <div
-        className={`p-6 rounded-lg border shadow-sm transition-colors ${
-          aiFeedback && !aiFeedback.approved
-            ? 'bg-rose-100 border-rose-200'
-            : 'bg-sky-100 border-indigo-200'
-        }`}
-      >
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-lg font-bold">
-              ✦
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">Wsparcie AI</h2>
-              <p className="text-sm text-indigo-700">Automatyczna ocena tekstu PR</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {aiFeedback && (
-              <>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    aiFeedback.approved
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                      : 'bg-red-50 text-red-900 border border-red-300 shadow-[0_0_0_1px_rgba(248,113,113,0.35)]'
-                  }`}
-                >
-                  {aiFeedback.approved ? 'Zatwierdzone' : 'Wymaga poprawek'}
-                </span>
-                <button
-                  type="button"
-                  onClick={handleRegenerateAI}
-                  disabled={aiLoading || !token}
-                  className="px-3 py-1 bg-indigo-600 text-white text-sm font-medium rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                  title="Regeneruj opinię AI"
-                >
-                  Odśwież
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        {aiError && (
-          <div className="mb-3 p-3 bg-red-100 text-red-800 rounded text-sm">
-            {aiError}
-          </div>
-        )}
-
-        {aiFeedback ? (
-          <>
-            {aiLoading && (
-              <div className="mb-3 flex items-center gap-2 text-indigo-700">
-                <div className="animate-spin h-4 w-4 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-                <span className="text-sm">Generuję nową opinię...</span>
-              </div>
-            )}
-            <div className="bg-white border border-indigo-100 rounded-lg p-4 shadow-sm">
-              <div className="prose prose-sm text-gray-800 max-w-none">
-                <ReactMarkdown>{aiFeedback.message}</ReactMarkdown>
-              </div>
-              <div className="mt-3 text-xs text-gray-500">
-                Wygenerowano: {new Date(aiFeedback.createdAt).toLocaleString('pl-PL')}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            {aiLoading && (
-              <div className="mb-3 flex items-center gap-2 text-indigo-700">
-                <div className="animate-spin h-4 w-4 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
-                <span className="text-sm">Generuję opinię...</span>
-              </div>
-            )}
-            <div className="flex items-center justify-between gap-4 bg-white border border-dashed border-indigo-200 rounded-lg p-4">
-              <div>
-                <p className="text-gray-800 font-medium">Brak jeszcze opinii AI</p>
-                <p className="text-sm text-gray-600">Wygeneruj automatyczny feedback w stylu code review dla tekstu prawnego.</p>
-              </div>
-              <button
-                type="button"
-                onClick={handleGenerateAI}
-                disabled={aiLoading || !token}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                {aiLoading ? 'Generuję...' : 'Wygeneruj feedback'}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
+        <AIReviewFeedback
+          prId={prId}
+          aiFeedback={aiFeedback}
+          aiError={aiError}
+          aiLoading={aiLoading}
+          token={token}
+          onGenerate={handleGenerateAI}
+          onRegenerate={handleRegenerateAI}
+        />
 
       {/* Comments */}
       <div className="bg-white p-6 rounded-lg border border-gray-200">

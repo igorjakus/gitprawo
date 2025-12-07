@@ -30,7 +30,7 @@ Tekst do analizy:
 
 Odpowiedź:`;
 
-const SUMMARY_PROMPT = `Porównaj poniższe dwie wersje aktu prawnego i wygeneruj podsumowanie najważniejszych zmian oraz wyjaśnij ich wpływ na obywateli. Podsumowanie ma być łatwe w odbiorze i napisane prostym, zrozumiałym językiem.
+const SUMMARY_PROMPT = `Porównaj poniższe dwie wersje aktu prawnego i wygeneruj podsumowanie najważniejszych zmian oraz wyjaśnij ich wpływ na obywateli. Podsumowanie ma być krótkie, łatwe w odbiorze i napisane prostym, zrozumiałym językiem. Skup się na praktycznych konsekwencjach zmian.
 
 Wersja wcześniejsza:
 ---

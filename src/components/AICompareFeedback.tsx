@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import AIFeedbackSection from "./AIFeedbackSection";
+import AIFeedback from "./AIFeedback";
 
 interface AICompareFeedbackProps {
   fromContent: string;
@@ -40,16 +40,18 @@ export default function AICompareFeedback({ fromContent, toContent }: AICompareF
   };
 
   return (
-    <AIFeedbackSection
+    <AIFeedback
       feedback={feedback}
       loading={loading}
       error={error}
       onGenerate={handleGenerate}
-      buttonLabel="Wygeneruj podsumowanie AI"
+      onRegenerate={handleGenerate}
+      title="Podsumowanie AI"
+      description="Automatyczne podsumowanie zmian między wersjami"
       emptyTitle="Brak jeszcze podsumowania AI"
       emptyDescription="Wygeneruj automatyczne podsumowanie zmian i ich wpływu prostym językiem."
-      generatingLabel="Generuję podsumowanie..."
-      generatingNewLabel="Generuję nowe podsumowanie..."
+      buttonLabel="Wygeneruj podsumowanie"
+      showApprovalBadge={false}
     />
   );
 }
