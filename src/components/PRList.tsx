@@ -9,6 +9,8 @@ interface PRListProps {
   status?: string;
   showPrivate?: boolean;
   token?: string;
+  currentUserId?: number;
+  userRole?: string;
 }
 
 export default function PRList({
@@ -16,6 +18,8 @@ export default function PRList({
   status,
   showPrivate = false,
   token: serverToken,
+  currentUserId,
+  userRole,
 }: PRListProps) {
   const [prs, setPrs] = useState<PullRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,6 +75,33 @@ export default function PRList({
 
     fetchPRs();
   }, [actId, status, showPrivate, token]);
+
+  const handleDelete = async (prId: number) => {
+    if (!token) return;
+    
+    if (!window.confirm('Czy na pewno chcesz usunąć tę propozycję zmian? Tej operacji nie można cofnąć.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/propozycje-zmian/${prId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        setPrs(prev => prev.filter(pr => pr.id !== prId));
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Nie udało się usunąć propozycji zmian');
+      }
+    } catch (err) {
+      console.error('Error deleting PR:', err);
+      alert('Wystąpił błąd podczas usuwania');
+    }
+  };
 
   if (loading) {
     return <div className="text-gray-500">Ładowanie pull requestów...</div>;
@@ -128,7 +159,7 @@ export default function PRList({
             >
               {pr.title}
             </Link>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
                   pr.status
@@ -140,6 +171,17 @@ export default function PRList({
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                   Prywatny
                 </span>
+              )}
+              {token && (userRole === 'admin' || pr.authorId === currentUserId) && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDelete(pr.id);
+                  }}
+                  className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium hover:bg-red-200 transition-colors"
+                >
+                  Usuń
+                </button>
               )}
             </div>
           </div>

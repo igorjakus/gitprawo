@@ -45,7 +45,11 @@ export default async function PullRequestsPage() {
           )}
         </div>
 
-        <PRList token={token} />
+        <PRList 
+          token={token} 
+          currentUserId={user?.id}
+          userRole={user?.role}
+        />
       </div>
     </main>
   );

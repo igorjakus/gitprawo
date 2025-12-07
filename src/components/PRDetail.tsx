@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import AIReviewFeedback from './AIReviewFeedback';
 import { PullRequest, PRChange, PRComment, PRAIFeedback } from '@/types';
 import EditPRModal from './EditPR';
@@ -12,9 +13,11 @@ interface PRDetailProps {
   prId: number;
   token?: string;
   currentUserId?: number;
+  userRole?: string;
 }
 
-export default function PRDetail({ prId, token: serverToken, currentUserId }: PRDetailProps) {
+export default function PRDetail({ prId, token: serverToken, currentUserId, userRole }: PRDetailProps) {
+  const router = useRouter();
   const [pr, setPr] = useState<PullRequest | null>(null);
   const [changes, setChanges] = useState<PRChange[]>([]);
   const [comments, setComments] = useState<PRComment[]>([]);
@@ -93,6 +96,34 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
     fetchData();
   }, [prId, token]);
+
+  const handleDelete = async () => {
+    if (!token) return;
+    
+    if (!window.confirm('Czy na pewno chcesz usunąć tę propozycję zmian? Tej operacji nie można cofnąć.')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/propozycje-zmian/${prId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        router.push('/propozycje-zmian');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Nie udało się usunąć propozycji zmian');
+      }
+    } catch (err) {
+      console.error('Error deleting PR:', err);
+      alert('Wystąpił błąd podczas usuwania');
+    }
+  };
 
   const handleVote = async (voteType: 'like' | 'dislike') => {
     if (!token) return;
@@ -312,6 +343,14 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-full font-medium hover:bg-gray-300"
               >
                 Edytuj
+              </button>
+            )}
+            {token && (userRole === 'admin' || pr.authorId === currentUserId) && (
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-100 text-red-800 rounded-full font-medium hover:bg-red-200 ml-2"
+              >
+                Usuń
               </button>
             )}
           </div>

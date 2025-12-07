@@ -10,7 +10,9 @@ export default async function PRPage({ params }: PRPageProps) {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   const userStr = cookieStore.get('user')?.value;
-  const currentUserId = userStr ? JSON.parse(userStr).id : undefined;
+  const user = userStr ? JSON.parse(userStr) : null;
+  const currentUserId = user ? user.id : undefined;
+  const userRole = user ? user.role : undefined;
   
   const { id } = await params;
   const prId = parseInt(id);
@@ -40,7 +42,12 @@ export default async function PRPage({ params }: PRPageProps) {
           ← Wróć do listy propozycji
         </Link>
 
-        <PRDetail prId={prId} token={token} currentUserId={currentUserId} />
+        <PRDetail 
+          prId={prId} 
+          token={token} 
+          currentUserId={currentUserId} 
+          userRole={userRole}
+        />
       </div>
     </main>
   );
