@@ -22,7 +22,7 @@ export default async function PRPage({ params }: PRPageProps) {
           <h1 className="text-2xl font-bold text-red-600">
             Nieprawidłowy ID propozycji zmian
           </h1>
-          <Link href="/pull-requests" className="text-blue-600 hover:underline">
+          <Link href="/propozycje-zmian" className="text-blue-600 hover:underline">
             Wróć do listy propozycji
           </Link>
         </div>
@@ -34,7 +34,7 @@ export default async function PRPage({ params }: PRPageProps) {
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <Link
-          href="/pull-requests"
+          href="/propozycje-zmian"
           className="text-blue-600 hover:underline mb-6 inline-block"
         >
           ← Wróć do listy propozycji

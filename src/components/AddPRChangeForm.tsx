@@ -46,7 +46,7 @@ export default function AddPRChangeForm({
       }
 
       const response = await fetch(
-        `/api/pull-requests/${prId}/changes`,
+        `/api/propozycje-zmian/${prId}/changes`,
         {
           method: 'POST',
           headers: {

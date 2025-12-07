@@ -28,7 +28,7 @@ export default function NewPullRequestPage() {
       const user = JSON.parse(userFromStorage);
 
       if (user.role !== 'expert' && user.role !== 'admin') {
-        router.push('/pull-requests');
+        router.push('/propozycje-zmian');
         return;
       }
     }
@@ -69,7 +69,7 @@ export default function NewPullRequestPage() {
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <Link
-          href="/pull-requests"
+          href="/propozycje-zmian"
           className="text-blue-600 hover:underline mb-6 inline-block"
         >
           ← Wróć do listy propozycji

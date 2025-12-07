@@ -54,10 +54,10 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         }
 
         const [prRes, changesRes, commentsRes, aiRes] = await Promise.all([
-          fetch(`/api/pull-requests/${prId}`, { headers }),
-          fetch(`/api/pull-requests/${prId}/changes`, { headers }),
-          fetch(`/api/pull-requests/${prId}/comments`, { headers }),
-          fetch(`/api/pull-requests/${prId}/ai-feedback`, { headers }),
+          fetch(`/api/propozycje-zmian/${prId}`, { headers }),
+          fetch(`/api/propozycje-zmian/${prId}/changes`, { headers }),
+          fetch(`/api/propozycje-zmian/${prId}/comments`, { headers }),
+          fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, { headers }),
         ]);
 
         if (!prRes.ok) {
@@ -98,7 +98,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
     if (!token) return;
 
     try {
-      const res = await fetch(`/api/pull-requests/${prId}/vote`, {
+      const res = await fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
 
     try {
       const response = await fetch(
-        `/api/pull-requests/${prId}/comments`,
+        `/api/propozycje-zmian/${prId}/comments`,
         {
           method: 'POST',
           headers: {
@@ -189,7 +189,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         throw new Error('Musisz być zalogowany aby wygenerować feedback AI');
       }
 
-      const res = await fetch(`/api/pull-requests/${prId}/ai-feedback`, {
+      const res = await fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
         throw new Error('Musisz być zalogowany aby wygenerować feedback AI');
       }
 
-      const res = await fetch(`/api/pull-requests/${prId}/ai-feedback`, {
+      const res = await fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -407,14 +407,14 @@ export default function PRDetail({ prId, token: serverToken, currentUserId }: PR
                 headers['Authorization'] = `Bearer ${token}`;
               }
               const res = await fetch(
-                `/api/pull-requests/${prId}/changes`,
+                `/api/propozycje-zmian/${prId}/changes`,
                 { headers }
               );
               if (res.ok) {
                 setChanges(await res.json());
               }
               // refresh AI feedback if it existed
-              const ai = await fetch(`/api/pull-requests/${prId}/ai-feedback`, { headers });
+              const ai = await fetch(`/api/propozycje-zmian/${prId}/ai-feedback`, { headers });
               if (ai.ok) {
                 setAiFeedback(await ai.json());
               }

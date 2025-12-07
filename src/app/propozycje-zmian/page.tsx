@@ -24,7 +24,7 @@ export default async function PullRequestsPage() {
         <div className="mb-6">
           {canCreatePR ? (
             <Link
-              href="/pull-requests/new"
+              href="/propozycje-zmian/new"
               className="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
               + Nowa propozycja zmian

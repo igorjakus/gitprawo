@@ -61,7 +61,7 @@ export default function CreatePRForm({
         return;
       }
 
-      const response = await fetch('/api/pull-requests', {
+      const response = await fetch('/api/propozycje-zmian', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function CreatePRForm({
         onSuccess();
       }
 
-      router.push(`/pull-requests/${pr.id}`);
+      router.push(`/propozycje-zmian/${pr.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {

@@ -36,7 +36,7 @@ export default function RootLayout({
                   Akty prawne
                 </Link>
                 <Link 
-                  href="/pull-requests" 
+                  href="/propozycje-zmian" 
                   className="hover:text-blue-200 transition-colors"
                 >
                   Propozycje zmian

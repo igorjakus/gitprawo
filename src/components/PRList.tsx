@@ -48,17 +48,17 @@ export default function PRList({
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const response = await fetch(
-          `/api/pull-requests?${params.toString()}`,
+        const res = await fetch(
+          `/api/propozycje-zmian?${params.toString()}`,
           { headers }
         );
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `Failed to fetch pull requests (${response.status})`);
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || `Failed to fetch pull requests (${res.status})`);
         }
 
-        const data = await response.json();
+        const data = await res.json();
         setPrs(data);
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error';
@@ -123,8 +123,8 @@ export default function PRList({
         >
           <div className="flex items-start justify-between mb-2">
             <Link
-              href={`/pull-requests/${pr.id}`}
-              className="text-lg font-semibold text-blue-600 hover:text-blue-800"
+              href={`/propozycje-zmian/${pr.id}`}
+              className="text-lg font-semibold text-gray-900 hover:text-indigo-600"
             >
               {pr.title}
             </Link>

@@ -45,7 +45,7 @@ export default function EditPRModal({
         throw new Error('Musisz być zalogowany');
       }
 
-      const response = await fetch(`/api/pull-requests/${pr.id}`, {
+      const response = await fetch(`/api/propozycje-zmian/${pr.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
