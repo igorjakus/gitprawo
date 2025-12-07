@@ -108,7 +108,7 @@ export default async function Home() {
                     {update.commitMessage}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    {update.date} • {update.version}
+                    {update.date}
                   </div>
                 </div>
               ))}

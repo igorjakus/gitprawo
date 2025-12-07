@@ -23,8 +23,8 @@ export default function VersionHistory({ actId, versions }: VersionHistoryProps)
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-3">
-                  <span className="font-mono text-sm font-semibold text-[#1e3a8a]">
-                    {version.version}
+                  <span className="text-sm font-semibold text-[#1e3a8a]">
+                    {version.date}
                   </span>
                   {index === 0 && (
                     <span className="px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded">
@@ -35,8 +35,6 @@ export default function VersionHistory({ actId, versions }: VersionHistoryProps)
                 <p className="mt-1 text-sm text-gray-900">{version.commitMessage}</p>
                 <div className="mt-2 flex items-center space-x-4 text-xs text-gray-500">
                   <span>{version.author}</span>
-                  <span>•</span>
-                  <span>{version.date}</span>
                   <span>•</span>
                   <span className="flex items-center space-x-2">
                     {version.additions !== undefined && (

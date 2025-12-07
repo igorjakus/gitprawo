@@ -26,10 +26,7 @@ export default function DiffViewer({
           <div className="flex items-center space-x-4">
             <div>
               <span className="text-sm text-gray-600">Od:</span>
-              <span className="ml-2 font-mono text-sm font-semibold text-[#1e3a8a]">
-                {fromVersion}
-              </span>
-              <span className="ml-2 text-xs text-gray-500">{fromDate}</span>
+              <span className="ml-2 text-sm font-semibold text-[#1e3a8a]">{fromDate}</span>
             </div>
             <svg
               className="w-5 h-5 text-gray-400"
@@ -44,10 +41,7 @@ export default function DiffViewer({
             </svg>
             <div>
               <span className="text-sm text-gray-600">Do:</span>
-              <span className="ml-2 font-mono text-sm font-semibold text-[#1e3a8a]">
-                {toVersion}
-              </span>
-              <span className="ml-2 text-xs text-gray-500">{toDate}</span>
+              <span className="ml-2 text-sm font-semibold text-[#1e3a8a]">{toDate}</span>
             </div>
           </div>
           <div className="flex items-center space-x-4 text-sm">

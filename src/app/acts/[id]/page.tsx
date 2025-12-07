@@ -46,9 +46,6 @@ export default async function ActPage({
               >
                 {act.status === 'active' ? 'Aktywny' : act.status === 'draft' ? 'Projekt' : 'Archiwalny'}
               </span>
-              <span className="text-sm text-gray-500">
-                Wersja {act.versions[0]?.version || 'N/A'}
-              </span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {act.shortTitle}
