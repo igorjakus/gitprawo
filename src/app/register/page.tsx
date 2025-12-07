@@ -11,6 +11,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,6 +21,11 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError('Hasła nie są identyczne');
+      return;
+    }
+
+    if (!termsAccepted) {
+      setError('Musisz zaakceptować regulamin i potwierdzić wiek');
       return;
     }
 
@@ -136,6 +142,20 @@ export default function RegisterPage() {
               placeholder="••••••••"
               required
             />
+          </div>
+
+          <div className="flex items-center">
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="h-4 w-4 text-[#1e3a8a] focus:ring-[#3b82f6] border-gray-300 rounded"
+            />
+            <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
+              Mam 18 lat i akceptuję regulamin
+            </label>
           </div>
 
           <button
