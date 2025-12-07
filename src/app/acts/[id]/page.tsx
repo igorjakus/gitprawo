@@ -37,14 +37,14 @@ export default async function ActPage({
               </span>
               <span
                 className={`px-3 py-1 text-sm font-medium rounded ${
-                  act.status === 'active'
+                  act.status === 'aktywny'
                     ? 'text-green-700 bg-green-50'
-                    : act.status === 'draft'
+                    : act.status === 'projekt'
                       ? 'text-yellow-700 bg-yellow-50'
                       : 'text-gray-700 bg-gray-50'
                 }`}
               >
-                {act.status === 'active' ? 'Aktywny' : act.status === 'draft' ? 'Projekt' : 'Archiwalny'}
+                {act.status === 'aktywny' ? 'Aktywny' : act.status === 'projekt' ? 'Projekt' : 'Archiwalny'}
               </span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">

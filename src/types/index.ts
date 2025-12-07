@@ -25,7 +25,7 @@ export interface Act {
   type: 'ustawa' | 'rozporządzenie' | 'konstytucja';
   publishDate: string;
   effectiveDate?: string;
-  status: 'active' | 'draft' | 'archived';
+  status: 'aktywny' | 'projekt' | 'archiwalny';
   versions: ActVersion[];
   legislativeStages: LegislativeStage[];
   description?: string;

@@ -48,7 +48,7 @@ export async function getAllActs(): Promise<Act[]> {
       shortTitle: row.short_title,
       type: row.type,
       publishDate: new Date(row.publish_date).toISOString().split('T')[0],
-      status: row.status === 'aktywny' ? 'active' : row.status === 'projekt' ? 'draft' : 'archived',
+      status: row.status,
       versions,
       legislativeStages: row.legislative_stages || [],
       description: '', // We can add description field to DB later
@@ -106,7 +106,7 @@ export async function getActById(id: string): Promise<Act | null> {
     shortTitle: row.short_title,
     type: row.type,
     publishDate: new Date(row.publish_date).toISOString().split('T')[0],
-    status: row.status === 'aktywny' ? 'active' : row.status === 'projekt' ? 'draft' : 'archived',
+    status: row.status,
     versions,
     legislativeStages: row.legislative_stages || [],
     description: '',

@@ -11,7 +11,7 @@ export default async function Home() {
   const acts = await getAllActs();
   
   // Stats
-  const activeActs = acts.filter((act) => act.status === 'active').length;
+  const activeActs = acts.filter((act) => act.status === 'aktywny').length;
   const totalVersions = acts.reduce((sum, act) => sum + act.versions.length, 0);
   const recentUpdates = acts
     .flatMap((act) =>
@@ -65,7 +65,7 @@ export default async function Home() {
                       <span className="px-2 py-1 text-xs font-medium text-[#1e3a8a] bg-blue-50 rounded">
                         {act.type.toUpperCase()}
                       </span>
-                      {act.status === 'active' && (
+                      {act.status === 'aktywny' && (
                         <span className="px-2 py-1 text-xs font-medium text-green-700 bg-green-50 rounded">
                           Aktywny
                         </span>

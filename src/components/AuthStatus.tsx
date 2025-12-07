@@ -6,8 +6,7 @@ import { useLayoutEffect, useState } from 'react';
 interface UserSession {
   id: number;
   login: string;
-  isAdmin: boolean;
-  isExpert: boolean;
+  role: 'default' | 'expert' | 'admin';
 }
 
 export default function AuthStatus() {
@@ -32,7 +31,19 @@ export default function AuthStatus() {
 
   useLayoutEffect(() => {
     // Load user on mount
-    loadUser();
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Failed to parse user:', error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
 
     // Listen for storage changes (from other tabs/windows)
     const handleStorageChange = () => {
@@ -87,9 +98,25 @@ export default function AuthStatus() {
 
   return (
     <div className="flex items-center space-x-4">
-      <span className="text-sm text-gray-100">
-        <strong>{user.login}</strong>
-      </span>
+      <div className="text-center">
+        <div className="text-sm text-gray-100 font-medium">{user.login}</div>
+        {user.role === 'admin' ? (
+          <Link
+            href="/admin"
+            className="text-xs font-semibold px-2 py-0.5 rounded inline-block bg-red-600 text-white hover:bg-red-700 transition-colors"
+          >
+            Panel Admina
+          </Link>
+        ) : (
+          <div className={`text-xs font-semibold px-2 py-0.5 rounded inline-block ${
+            user.role === 'expert'
+              ? 'bg-blue-600 text-white'
+              : 'bg-gray-600 text-white'
+          }`}>
+            {user.role === 'expert' ? 'Ekspert' : 'Użytkownik'}
+          </div>
+        )}
+      </div>
       <button
         onClick={handleLogout}
         className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-800 transition-colors font-medium text-sm"
